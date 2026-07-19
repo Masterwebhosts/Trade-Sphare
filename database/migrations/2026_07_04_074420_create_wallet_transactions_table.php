@@ -18,7 +18,7 @@ return new class extends Migration
             */
             $table->foreignId('wallet_id')
                 ->constrained('wallets')
-                ->cascadeOnDelete();
+                ->restrictOnDelete();
 
             /*
             |--------------------------------------------------------------------------
@@ -53,8 +53,10 @@ return new class extends Migration
             |--------------------------------------------------------------------------
             | Amount
             |--------------------------------------------------------------------------
+            | Supports fractional CPC
+            | Example: 0.025000
             */
-            $table->decimal('amount', 12, 2);
+            $table->decimal('amount', 14, 6);
 
             /*
             |--------------------------------------------------------------------------
@@ -90,7 +92,12 @@ return new class extends Migration
             $table->index('direction');
             $table->index('category');
             $table->index('status');
-            $table->index(['reference_type', 'reference_id']);
+
+            $table->index([
+                'reference_type',
+                'reference_id'
+            ]);
+
             $table->index('created_at');
         });
     }

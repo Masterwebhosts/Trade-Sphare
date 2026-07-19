@@ -18,7 +18,7 @@ class AdServe extends Model
     protected $casts = [
         'clicked' => 'boolean',
         'expires_at' => 'datetime',
-        'cpc' => 'float',
+        'cpc' => 'decimal:6',
     ];
 
     public function ad()

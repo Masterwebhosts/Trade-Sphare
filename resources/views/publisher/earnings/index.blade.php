@@ -4,8 +4,8 @@
 
 @php
     function money($value): string {
-        return number_format((float) $value, 2) . '$';
-    }
+    return number_format((float) $value, 6) . '$';
+}
 @endphp
 
 <div class="max-w-7xl mx-auto p-6 space-y-6">
@@ -20,7 +20,7 @@
     <div class="bg-white border rounded-2xl p-5 shadow-sm">
         <div class="text-sm text-gray-500">إجمالي الأرباح</div>
         <div class="text-3xl font-bold text-green-600 mt-1">
-            ${{ number_format($total ?? 0, 2) }}
+            ${{ number_format($total ?? 0, 6) }}
         </div>
     </div>
 
@@ -59,7 +59,7 @@
                     <tr class="border-t hover:bg-gray-50 transition">
 
                         <td class="p-3 font-semibold text-green-600">
-                            ${{ number_format($e->amount, 2) }}
+                            ${{ number_format($e->amount, 6) }}
                         </td>
 
                         <td class="p-3 text-gray-700">

@@ -57,6 +57,7 @@ class Click extends Model
 
     protected $fillable = [
 
+
         'ad_id',
 
         'publisher_id',
@@ -86,6 +87,15 @@ class Click extends Model
 
     protected $casts = [
 
+
+        'ad_id' => 'integer',
+
+        'publisher_id' => 'integer',
+
+        'zone_id' => 'integer',
+
+        'impression_id' => 'integer',
+
         'is_fraud' => 'boolean',
 
     ];
@@ -98,15 +108,13 @@ class Click extends Model
     |--------------------------------------------------------------------------
     */
 
-
     public function ad(): BelongsTo
     {
         return $this->belongsTo(
-            Ad::class
+            Ad::class,
+            'ad_id'
         );
     }
-
-
 
     public function publisher(): BelongsTo
     {
@@ -131,7 +139,8 @@ class Click extends Model
     public function impression(): BelongsTo
     {
         return $this->belongsTo(
-            Impression::class
+            Impression::class,
+            'impression_id'
         );
     }
 

@@ -3,6 +3,7 @@
 namespace App\Services\Tracking;
 
 use App\Models\Ad;
+use App\Models\AdZone;
 use App\Models\Click;
 use App\Models\AdClickDedup;
 use App\Services\Fraud\FraudDetectionService;
@@ -27,7 +28,24 @@ class ClickService
     ): ?Click {
 
 
+        /*
+        |--------------------------------------------------------------------------
+        | Resolve Zone
+        |--------------------------------------------------------------------------
+        */
+
         $zone = $context['zone'] ?? null;
+
+
+        if (! $zone && isset($context['ad_zone_id'])) {
+
+            $zone = AdZone::query()
+    ->where('id', $context['ad_zone_id'])
+    ->where('status', AdZone::STATUS_ACTIVE)
+    ->first();
+
+        }
+
 
 
         if (! $zone || ! $zone->isServeable()) {
@@ -74,14 +92,6 @@ class ClickService
         try {
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | STEP 1
-            | Store click + dedup protection
-            |--------------------------------------------------------------------------
-            */
-
-
             $click = DB::transaction(function () use (
                 $ad,
                 $zone,
@@ -104,11 +114,6 @@ class ClickService
 
 
 
-                /*
-                 * Block duplicate clicks
-                 * within 10 minutes
-                 */
-
                 if (
                     $dedup
                     &&
@@ -119,9 +124,9 @@ class ClickService
                     logger()->info(
                         'Duplicate click blocked',
                         [
-                            'ad_id'=>$ad->id,
-                            'zone_id'=>$zone->id,
-                            'fingerprint'=>$fingerprint,
+                            'ad_id' => $ad->id,
+                            'zone_id' => $zone->id,
+                            'fingerprint' => $fingerprint,
                         ]
                     );
 
@@ -132,17 +137,11 @@ class ClickService
 
 
 
-                /*
-                 * Update or create dedup record
-                 */
-
                 if ($dedup) {
 
 
                     $dedup->update([
-
-                        'last_click_at'=>now(),
-
+                        'last_click_at' => now(),
                     ]);
 
 
@@ -151,13 +150,13 @@ class ClickService
 
                     AdClickDedup::create([
 
-                        'ad_id'=>$ad->id,
+                        'ad_id' => $ad->id,
 
-                        'zone_id'=>$zone->id,
+                        'zone_id' => $zone->id,
 
-                        'fingerprint'=>$fingerprint,
+                        'fingerprint' => $fingerprint,
 
-                        'last_click_at'=>now(),
+                        'last_click_at' => now(),
 
                     ]);
 
@@ -165,38 +164,25 @@ class ClickService
 
 
 
-
-                /*
-                 * Permanent click record
-                 */
-
                 return Click::create([
 
+                    'ad_id' => $ad->id,
 
-                    'ad_id'=>$ad->id,
+                    'publisher_id' => $zone->publisher_id,
 
+                    'zone_id' => $zone->id,
 
-                    'publisher_id'=>$zone->publisher_id,
+                    'ip_address' => $ip,
 
-
-                    'zone_id'=>$zone->id,
-
-
-                    'ip_address'=>$ip,
-
-
-                    'user_agent'=>substr(
+                    'user_agent' => substr(
                         $ua,
                         0,
                         255
                     ),
 
+                    'fingerprint' => $fingerprint,
 
-                    'fingerprint'=>$fingerprint,
-
-
-                    'is_fraud'=>$isFraud,
-
+                    'is_fraud' => $isFraud,
 
                 ]);
 
@@ -204,13 +190,6 @@ class ClickService
 
 
 
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Duplicate click
-            |--------------------------------------------------------------------------
-            */
 
             if (! $click) {
 
@@ -223,7 +202,6 @@ class ClickService
 
             /*
             |--------------------------------------------------------------------------
-            | STEP 2
             | Ledger
             |--------------------------------------------------------------------------
             */
@@ -236,7 +214,7 @@ class ClickService
             ) {
 
 
-                $cpc = (float) $ad->campaign->cpc;
+                $cpc = $ad->campaign->cpc;
 
 
 
@@ -248,19 +226,15 @@ class ClickService
 
                         $this->ledger->chargeClickWithSplit(
 
-                            campaignId:$ad->campaign_id,
+                            campaignId: $ad->campaign_id,
 
+                            advertiserId: $ad->campaign->advertiser_id,
 
-                            advertiserId:$ad->campaign->advertiser_id,
+                            publisherId: $zone->publisher_id,
 
+                            amount: $cpc,
 
-                            publisherId:$zone->publisher_id,
-
-
-                            amount:$cpc,
-
-
-                            clickId:$click->id
+                            clickId: $click->id
 
                         );
 
@@ -271,13 +245,11 @@ class ClickService
                         logger()->error(
                             'Ledger failed after click creation',
                             [
+                                'click_id' => $click->id,
 
-                                'click_id'=>$click->id,
+                                'ad_id' => $ad->id,
 
-                                'ad_id'=>$ad->id,
-
-                                'error'=>$e->getMessage(),
-
+                                'error' => $e->getMessage(),
                             ]
                         );
 
@@ -298,33 +270,19 @@ class ClickService
         } catch (QueryException $e) {
 
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Database duplicate constraint
-            |--------------------------------------------------------------------------
-            */
-
-
             if (
-
                 $e->getCode() === '23000'
-
                 ||
-
                 (($e->errorInfo[1] ?? null) === 1062)
-
             ) {
 
 
                 logger()->info(
                     'Duplicate click blocked by database',
                     [
+                        'ad_id' => $ad->id,
 
-                        'ad_id'=>$ad->id,
-
-                        'fingerprint'=>$fingerprint,
-
+                        'fingerprint' => $fingerprint,
                     ]
                 );
 

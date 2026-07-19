@@ -139,9 +139,10 @@ class AdZone extends Model
 
     public function isServeable(): bool
     {
-        return $this->isActive()
-            && filled($this->token)
-            && ! is_null($this->publisher_id);
+        return
+    $this->isActive()
+    && filled($this->token)
+    && $this->publisher()->exists();
     }
     /*
     |--------------------------------------------------------------------------

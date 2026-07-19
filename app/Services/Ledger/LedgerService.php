@@ -11,10 +11,10 @@ use RuntimeException;
 class LedgerService
 {
     /*
-    |----------------------------------
+    |--------------------------------------------------------------------------
     | CORE WRITER
     | SINGLE SOURCE OF TRUTH
-    |----------------------------------
+    |--------------------------------------------------------------------------
     */
 
     public function record(array $entries): void
@@ -29,7 +29,6 @@ class LedgerService
         DB::transaction(function () use ($entries) {
 
             foreach ($entries as $entry) {
-
 
                 foreach (
                     [
@@ -71,26 +70,42 @@ class LedgerService
 
                 WalletTransaction::create([
 
-                    'wallet_id'      => $entry['wallet_id'],
+                    'wallet_id' =>
+                        $entry['wallet_id'],
 
-                    'type'           => $entry['type'],
+                    'type' =>
+                        $entry['type'],
 
-                    'category'       =>
+                    'category' =>
                         $entry['category'] ?? 'general',
 
 
                     /*
                      * Ledger keeps positive amounts
                      */
-                    'amount'         =>
-                        round(abs($entry['amount']), 2),
+                    'amount' =>
+    bccomp(
+        (string) $entry['amount'],
+        '0',
+        6
+    ) < 0
+        ? bcmul(
+            (string) $entry['amount'],
+            '-1',
+            6
+        )
+        : bcadd(
+            (string) $entry['amount'],
+            '0',
+            6
+        ),
 
 
-                    'direction'      =>
+                    'direction' =>
                         $entry['direction'],
 
 
-                    'status'         =>
+                    'status' =>
                         $entry['status']
                         ??
                         WalletTransaction::STATUS_APPROVED,
@@ -117,22 +132,28 @@ class LedgerService
 
 
     /*
-    |----------------------------------
+    |--------------------------------------------------------------------------
     | CLICK SPLIT ENGINE
-    |----------------------------------
+    |--------------------------------------------------------------------------
     */
 
     public function chargeClickWithSplit(
         int $campaignId,
         int $advertiserId,
         int $publisherId,
-        float $amount,
+        string|float $amount,
         int $clickId,
-        float $platformRate = 0.30
+        string|float $platformRate = 0.50
     ): void {
 
 
-        if ($amount <= 0) {
+        if (
+            bccomp(
+                (string) $amount,
+                '0',
+                6
+            ) <= 0
+        ) {
 
             return;
 
@@ -211,7 +232,13 @@ class LedgerService
 
 
 
-            if ($balance < $amount) {
+            if (
+                bccomp(
+                    (string) $balance,
+                    (string) $amount,
+                    6
+                ) < 0
+            ) {
 
                 throw new RuntimeException(
                     "Advertiser insufficient balance"
@@ -222,21 +249,29 @@ class LedgerService
 
 
             $platformCut =
-                round(
-                    $amount * $platformRate,
-                    2
+                bcmul(
+                    (string) $amount,
+                    (string) $platformRate,
+                    6
                 );
 
 
             $publisherCut =
-                round(
-                    $amount - $platformCut,
-                    2
+                bcsub(
+                    (string) $amount,
+                    (string) $platformCut,
+                    6
                 );
 
 
 
-            if ($publisherCut <= 0) {
+            if (
+                bccomp(
+                    $publisherCut,
+                    '0',
+                    6
+                ) <= 0
+            ) {
 
                 throw new RuntimeException(
                     'Invalid publisher earning amount'
@@ -257,7 +292,7 @@ class LedgerService
                         WalletTransaction::TYPE_CAMPAIGN_CHARGE,
 
                     'category' =>
-                        'click',
+                        WalletTransaction::CATEGORY_CLICK,
 
                     'amount' =>
                         $amount,
@@ -288,7 +323,7 @@ class LedgerService
                         WalletTransaction::TYPE_EARNING,
 
                     'category' =>
-                        'click',
+                        WalletTransaction::CATEGORY_CLICK,
 
                     'amount' =>
                         $publisherCut,
@@ -319,7 +354,7 @@ class LedgerService
                         WalletTransaction::TYPE_PLATFORM_FEE,
 
                     'category' =>
-                        'click',
+                        WalletTransaction::CATEGORY_CLICK,
 
                     'amount' =>
                         $platformCut,
@@ -349,9 +384,9 @@ class LedgerService
 
 
     /*
-    |----------------------------------
+    |--------------------------------------------------------------------------
     | HELPERS
-    |----------------------------------
+    |--------------------------------------------------------------------------
     */
 
 
@@ -380,10 +415,9 @@ class LedgerService
 
     private function walletBalance(
         int $walletId
-    ): float {
+    ): string {
 
-
-        return (float)
+        return (string)
 
             WalletTransaction::query()
 

@@ -214,25 +214,21 @@ class Ad extends Model
 
 
     public function scopeServeable($query)
-    {
-        return $query
-            ->where(
-                'status',
-                self::STATUS_ACTIVE
-            )
-            ->whereHas(
-                'campaign',
-                function ($q) {
+{
+    return $query
+        ->where(
+            'status',
+            self::STATUS_ACTIVE
+        )
+        ->whereHas(
+            'campaign',
+            function ($q) {
 
-                    $q->where(
-                        'status',
-                        Campaign::STATUS_APPROVED
-                    );
+                $q->running();
 
-                }
-            );
-    }
-
+            }
+        );
+}
 
     public function scopeEligible($query)
     {

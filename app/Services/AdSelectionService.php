@@ -28,7 +28,10 @@ class AdSelectionService
         return null;
     }
 
-    $zone = AdZone::find($zoneId);
+    $zone = AdZone::query()
+    ->whereKey($zoneId)
+    ->where('status', AdZone::STATUS_ACTIVE)
+    ->first();
 
     if (! $zone) {
         return null;
@@ -57,20 +60,15 @@ class AdSelectionService
         if ($zoneToken) {
 
 
-            $zone = AdZone::query()
-
-                ->where(
-                    'token',
-                    $zoneToken
-                )
-
-                ->with([
-                    'ads.campaign'
-                ])
-
-                ->first();
-
-
+        $zone = AdZone::query()
+    ->where(
+        'token',
+        $zoneToken
+    )
+    ->with([
+        'ads.campaign'
+    ])
+    ->first();
 
             if (
                 ! $zone ||
@@ -165,7 +163,12 @@ class AdSelectionService
         $ads = $ads->filter(
             function (Ad $ad) {
 
-                return $ad->canBeServed();
+                return
+    $ad->canBeServed()
+    &&
+    $ad->campaign
+    &&
+    $ad->campaign->hasBudget();
 
             }
         );

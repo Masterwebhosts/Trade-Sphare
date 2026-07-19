@@ -23,7 +23,7 @@
         </div>
 
         <div class="text-5xl font-bold mt-2">
-            ${{ number_format($wallet?->available_balance ?? 0, 2) }}
+            ${{ number_format($wallet?->available_balance ?? 0, 6) }}
         </div>
 
         <div class="mt-3 text-sm opacity-75">

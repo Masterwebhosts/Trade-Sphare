@@ -4,8 +4,8 @@
 
 @php
     $money = function ($value) {
-        return number_format((float) ($value ?? 0), 2) . '$';
-    };
+    return number_format((float) ($value ?? 0), 4) . '$';
+};
 @endphp
 
 <div class="max-w-7xl mx-auto p-6 space-y-6">

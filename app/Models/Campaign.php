@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-
 class Campaign extends Model
 {
     use HasFactory;
@@ -23,6 +22,8 @@ class Campaign extends Model
     public const STATUS_PENDING  = 'pending';
     public const STATUS_APPROVED = 'approved';
     public const STATUS_REJECTED = 'rejected';
+    public const STATUS_PAUSED   = 'paused';
+    public const STATUS_COMPLETED = 'completed';
 
 
 
@@ -68,13 +69,13 @@ class Campaign extends Model
 
     protected $casts = [
 
-        'budget_total'     => 'float',
+        'budget_total'     => 'decimal:6',
 
-        'budget_spent'     => 'float',
+        'budget_spent'     => 'decimal:6',
 
-        'budget_remaining' => 'float',
+        'budget_remaining' => 'decimal:6',
 
-        'cpc'              => 'float',
+        'cpc'              => 'decimal:6',
 
         'start_date'       => 'date',
 
@@ -199,18 +200,18 @@ class Campaign extends Model
     */
 
 
-    public function getSpentAttribute(): float
+    public function getSpentAttribute(): string
     {
-        return (float) $this->budget_spent;
+        return (string) $this->budget_spent;
     }
 
 
 
-    public function getRemainingAttribute(): float
+    public function getRemainingAttribute(): string
     {
         return max(
-            0,
-            (float) $this->budget_remaining
+            '0',
+            (string) $this->budget_remaining
         );
     }
 
@@ -218,7 +219,11 @@ class Campaign extends Model
 
     public function hasBudget(): bool
     {
-        return $this->remaining > 0;
+        return bccomp(
+            $this->remaining,
+            (string) $this->cpc,
+            6
+        ) >= 0;
     }
 
 

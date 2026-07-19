@@ -58,8 +58,42 @@
 </div>
 @else
 
-    <div style="padding:20px;text-align:center;color:#999">
-        لا يوجد إعلان متاح حالياً
+    <div style="
+        border:1px solid #e5e7eb;
+        padding:25px 15px;
+        text-align:center;
+        border-radius:10px;
+        background:#fff;
+        color:#6b7280;
+    ">
+
+        <div style="
+            font-size:36px;
+            margin-bottom:10px;
+        ">
+            📢
+        </div>
+
+        <div style="
+            font-size:15px;
+            margin-bottom:18px;
+        ">
+            لا يوجد إعلان متاح حالياً
+        </div>
+
+        <a href="/"
+           style="
+                display:inline-block;
+                padding:10px 18px;
+                background:#111827;
+                color:#fff;
+                border-radius:8px;
+                text-decoration:none;
+                font-size:14px;
+           ">
+            العودة إلى الصفحة الرئيسية
+        </a>
+
     </div>
 
 @endif

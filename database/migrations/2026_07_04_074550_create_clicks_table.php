@@ -13,13 +13,36 @@ return new class extends Migration
             $table->id();
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Campaign
+            |--------------------------------------------------------------------------
+            */
+
+            $table->foreignId('campaign_id')
+                ->constrained('campaigns')
+                ->cascadeOnDelete();
+
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Advertisement
+            |--------------------------------------------------------------------------
+            */
+
             $table->foreignId('ad_id')
                 ->constrained('ads')
                 ->cascadeOnDelete();
 
 
 
-            // Publisher is a User with role=publisher
+            /*
+            |--------------------------------------------------------------------------
+            | Publisher / Zone
+            |--------------------------------------------------------------------------
+            */
+
             $table->foreignId('publisher_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
@@ -32,6 +55,12 @@ return new class extends Migration
 
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Impression relation
+            |--------------------------------------------------------------------------
+            */
+
             $table->foreignId('impression_id')
                 ->nullable()
                 ->constrained('impressions')
@@ -39,24 +68,30 @@ return new class extends Migration
 
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | Visitor Data
+            |--------------------------------------------------------------------------
+            */
+
             $table->string('ip_address', 255)
                 ->nullable();
-
 
 
             $table->text('user_agent')
                 ->nullable();
 
 
-
-            /**
-             * Visitor fingerprint
-             * SHA1(ip + user_agent)
-             */
             $table->string('fingerprint', 64)
                 ->nullable();
 
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fraud
+            |--------------------------------------------------------------------------
+            */
 
             $table->boolean('is_fraud')
                 ->default(false);
@@ -65,6 +100,18 @@ return new class extends Migration
 
             $table->timestamps();
 
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Indexes
+            |--------------------------------------------------------------------------
+            */
+
+            $table->index([
+                'campaign_id',
+                'created_at'
+            ]);
 
 
             $table->index([
@@ -77,6 +124,9 @@ return new class extends Migration
                 'publisher_id',
                 'created_at'
             ]);
+
+
+            $table->index('zone_id');
 
 
             $table->index('is_fraud');

@@ -52,7 +52,7 @@ class WalletTransaction extends Model
 
     protected $casts = [
         'meta'         => 'array',
-        'amount'       => 'decimal:2',
+        'amount'       => 'decimal:6',
         'reference_id' => 'integer',
     ];
 
@@ -88,6 +88,8 @@ class WalletTransaction extends Model
     public const TYPE_TOPUP = 'topup';
 
     public const TYPE_WITHDRAWAL = 'withdrawal';
+
+    public const TYPE_REFUND = 'refund';
 
 
 

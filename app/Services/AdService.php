@@ -20,6 +20,7 @@ class AdService
     public function getAdForZone(int $zoneId): ?Ad
     {
 
+
         /*
         |--------------------------------------------------------------------------
         | Load active zone
@@ -27,9 +28,12 @@ class AdService
         */
 
         $zone = AdZone::query()
-            ->where('id', $zoneId)
-            ->where('status', 'active')
-            ->first();
+    ->whereKey($zoneId)
+    ->where(
+        'status',
+        AdZone::STATUS_ACTIVE
+    )
+    ->first();
 
 
 
@@ -57,14 +61,40 @@ class AdService
 
         /*
         |--------------------------------------------------------------------------
-        | Delegate selection
+        | Select advertisement
         |--------------------------------------------------------------------------
         */
 
-        return $this->selectionService->serve(
+        $ad = $this->selectionService->serve(
             zoneId: $zone->id,
             publisherId: $zone->publisher_id
         );
+
+
+
+        if (! $ad) {
+
+            return null;
+
+        }
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Final advertisement validation
+        |--------------------------------------------------------------------------
+        */
+
+        if (! $ad->canBeServed()) {
+
+            return null;
+
+        }
+
+
+
+        return $ad;
 
     }
 }

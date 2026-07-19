@@ -32,6 +32,18 @@ class Wallet extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | STATUS
+    |--------------------------------------------------------------------------
+    */
+
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_BLOCKED = 'blocked';
+
+
+
+    /*
+    |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
@@ -63,14 +75,14 @@ class Wallet extends Model
     */
 
 
-    public function getBalanceAttribute(): float
+    public function getBalanceAttribute(): string
     {
         return $this->calculateBalance();
     }
 
 
 
-    public function calculateBalance(): float
+    public function calculateBalance(): string
     {
         $credits = $this->transactions()
             ->where(
@@ -98,9 +110,10 @@ class Wallet extends Model
 
 
 
-        return round(
-            (float) $credits - (float) $debits,
-            2
+        return bcsub(
+            (string) $credits,
+            (string) $debits,
+            6
         );
     }
 
@@ -136,8 +149,12 @@ class Wallet extends Model
     */
 
 
-    public function hasBalance(float $amount): bool
+    public function hasBalance(string|float $amount): bool
     {
-        return $this->calculateBalance() >= $amount;
+        return bccomp(
+            $this->calculateBalance(),
+            (string) $amount,
+            6
+        ) >= 0;
     }
 }
