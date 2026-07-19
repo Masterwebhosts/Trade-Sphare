@@ -1,334 +1,158 @@
-@extends('layouts.app')
+@extends('layouts.publisher')
+
+@section('title', 'تفاصيل المنطقة الإعلانية')
 
 @section('content')
+<div class="container">
 
-<div class="max-w-3xl mx-auto p-6 space-y-6">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">تفاصيل المنطقة الإعلانية</h3>
 
+        <a href="{{ route('publisher.zones.edit', $zone->id) }}"
+   class="btn btn-warning">
+    تعديل
+</a>
 
-    {{-- HEADER --}}
-    <div>
-
-        <h1 class="text-2xl font-bold">
-            تفاصيل منطقة الإعلان
-        </h1>
-
-        <p class="text-gray-500 text-sm mt-1">
-            معلومات المنطقة وروابط التضمين والإعلانات المرتبطة
-        </p>
-
+            <a href="{{ route('publisher.zones.index') }}"
+               class="btn btn-secondary">
+                رجوع
+            </a>
+        </div>
     </div>
 
+    <div class="card shadow-sm">
+        <div class="card-body">
 
+            <table class="table table-bordered align-middle">
 
-    {{-- INFO CARD --}}
-    <div class="bg-white border rounded-xl shadow-sm p-6 space-y-6">
+                <tr>
+                    <th width="220">الاسم</th>
+                    <td>{{ $zone->name }}</td>
+                </tr>
 
+                <tr>
+                    <th>النوع</th>
+                    <td>
+                        @switch($zone->zone_type)
+                            @case('banner')
+                                بانر
+                                @break
 
-        {{-- BASIC INFO --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
+                            @case('native')
+                                إعلان مدمج
+                                @break
 
+                            @case('popup')
+                                نافذة منبثقة
+                                @break
 
-            <div>
-                <div class="text-gray-500">
-                    معرف المنطقة
-                </div>
+                            @default
+                                {{ $zone->zone_type }}
+                        @endswitch
+                    </td>
+                </tr>
 
-                <div class="font-semibold">
-                    {{ $zone->id }}
-                </div>
-            </div>
+                <tr>
+                    <th>المحافظة</th>
+                    <td>
+                        {{ $zone->governorate?->name ?? 'جميع المحافظات' }}
+                    </td>
+                </tr>
 
+                <tr>
+                    <th>الحالة</th>
+                    <td>
+                        @if($zone->status == \App\Models\AdZone::STATUS_ACTIVE)
+                            <span class="badge bg-success">
+                                نشطة
+                            </span>
+                        @else
+                            <span class="badge bg-danger">
+                                غير نشطة
+                            </span>
+                        @endif
+                    </td>
+                </tr>
 
+                <tr>
+                    <th>رمز المنطقة (Token)</th>
+                    <td>
+                        <code>{{ $zone->token }}</code>
+                    </td>
+                </tr>
 
-            <div>
-                <div class="text-gray-500">
-                    اسم المنطقة
-                </div>
+                <tr>
+                    <th>تاريخ الإنشاء</th>
+                    <td>{{ $zone->created_at?->format('Y-m-d H:i') ?? '-' }}</td>
+                </tr>
 
-                <div class="font-semibold">
-                    {{ $zone->name }}
-                </div>
-            </div>
-
-
-
-            <div>
-                <div class="text-gray-500">
-                    نوع المنطقة
-                </div>
-
-                <div class="font-semibold">
-                    {{ ucfirst($zone->zone_type) }}
-                </div>
-            </div>
-
-
-
-            <div>
-                <div class="text-gray-500">
-                    المحافظة
-                </div>
-
-                <div class="font-semibold">
-
-                    {{ 
-                        $zone->governorate
-                        ? $zone->governorate->name
-                        : 'كل سوريا'
-                    }}
-
-                </div>
-
-            </div>
-
-
-
-            <div>
-                <div class="text-gray-500">
-                    الحالة
-                </div>
-
-                <div class="font-semibold text-green-600">
-                    {{ $zone->status }}
-                </div>
-            </div>
-
-
+            </table>
 
         </div>
-
-
-
-        {{-- API URL --}}
-        <div>
-
-
-            <label class="block text-sm font-semibold mb-2">
-                رابط تشغيل الإعلان
-            </label>
-
-
-            @php
-
-                $apiUrl = url(
-                    '/api/zones/'.$zone->token.'/serve'
-                );
-
-            @endphp
-
-
-            <div class="flex gap-2">
-
-                <input
-                    id="apiUrl"
-                    readonly
-                    value="{{ $apiUrl }}"
-                    class="w-full border rounded-lg p-2 text-sm bg-gray-50"
-                >
-
-
-                <button
-                    onclick="copyText('apiUrl')"
-                    class="bg-blue-600 text-white px-4 rounded-lg text-sm">
-
-                    نسخ
-
-                </button>
-
-            </div>
-
-
-        </div>
-
-
-
-
-        {{-- EMBED SCRIPT --}}
-        <div>
-
-
-            <label class="block text-sm font-semibold mb-2">
-                كود التضمين
-            </label>
-
-
-            @php
-
-                $script =
-                "<script src='".url('/js/serve.js')."' data-zone='".$zone->token."'></script>";
-
-            @endphp
-
-
-
-            <div class="flex gap-2">
-
-
-                <input
-                    id="embedCode"
-                    readonly
-                    value="{{ $script }}"
-                    class="w-full border rounded-lg p-2 text-xs bg-gray-50"
-                >
-
-
-                <button
-                    onclick="copyText('embedCode')"
-                    class="bg-green-600 text-white px-4 rounded-lg text-sm">
-
-                    نسخ
-
-                </button>
-
-
-            </div>
-
-
-        </div>
-
-
-
-
-
-        {{-- EMBED URL --}}
-        <div>
-
-
-            <label class="block text-sm font-semibold mb-2">
-                رابط التضمين المباشر
-            </label>
-
-
-            @php
-
-                $embedUrl = url(
-                    '/embed/zones/'.$zone->token
-                );
-
-            @endphp
-
-
-
-            <div class="flex gap-2">
-
-
-                <input
-                    id="embedUrl"
-                    readonly
-                    value="{{ $embedUrl }}"
-                    class="w-full border rounded-lg p-2 text-sm bg-gray-50"
-                >
-
-
-                <button
-                    onclick="copyText('embedUrl')"
-                    class="bg-gray-700 text-white px-4 rounded-lg text-sm">
-
-                    نسخ
-
-                </button>
-
-
-            </div>
-
-
-        </div>
-
-
-
-
-
-        {{-- ADS --}}
-        <div>
-
-
-            <label class="block text-sm font-semibold mb-2">
-                الإعلانات المرتبطة
-            </label>
-
-
-            <div class="border rounded-lg p-4 space-y-2">
-
-
-                @forelse($zone->ads as $ad)
-
-
-                    <div class="text-sm">
-
-                        #{{ $ad->id }}
-                        -
-                        {{ $ad->title }}
-
-                    </div>
-
-
-                @empty
-
-
-                    <div class="text-gray-500 text-sm">
-
-                        لا يوجد إعلانات مربوطة،
-                        سيتم استخدام التوزيع العام.
-
-                    </div>
-
-
-                @endforelse
-
-
-            </div>
-
-
-        </div>
-
-
-
-
     </div>
 
+    <div class="card shadow-sm mt-4">
+        <div class="card-header">
+            <strong>الإعلانات المرتبطة</strong>
+        </div>
+
+        <div class="card-body">
+
+            @if($zone->ads->isEmpty())
+
+                <div class="alert alert-info mb-0">
+                    لا توجد إعلانات مرتبطة بهذه المنطقة.
+                </div>
+
+            @else
+
+                <table class="table table-striped">
+
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>العنوان</th>
+                        <th>النوع</th>
+                        <th>الحالة</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    @foreach($zone->ads as $ad)
+
+                        <tr>
+
+                            <td>{{ $loop->iteration }}</td>
+
+                            <td>{{ $ad->title }}</td>
+
+                            <td>{{ ucfirst($ad->type) }}</td>
+
+                            <td>
+                                @if($ad->status == \App\Models\Ad::STATUS_ACTIVE)
+                                    <span class="badge bg-success">
+                                        نشط
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary">
+                                        غير نشط
+                                    </span>
+                                @endif
+                            </td>
+
+                        </tr>
+
+                    @endforeach
+
+                    </tbody>
+
+                </table>
+
+            @endif
+
+        </div>
+    </div>
 
 </div>
-
-
-
-
-
-<div id="toast"
-     class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-2 rounded-lg hidden text-sm">
-
-تم النسخ ✔
-
-</div>
-
-
-
-
-<script>
-
-function copyText(id)
-{
-
-    const input = document.getElementById(id);
-
-    navigator.clipboard.writeText(input.value);
-
-
-    const toast =
-        document.getElementById('toast');
-
-
-    toast.classList.remove('hidden');
-
-
-    setTimeout(()=>{
-
-        toast.classList.add('hidden');
-
-    },1500);
-
-}
-
-</script>
-
-
 @endsection

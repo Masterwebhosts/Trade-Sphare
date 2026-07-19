@@ -8,8 +8,20 @@ class AdFormat extends Model
 {
     protected $fillable = [
         'name',
-        'type',
-        'width',
-        'height',
+        'slug',
+        'code',
+        'size',
+        'description',
+        'status',
+        'supports_video',
+        'supports_image',
+        'max_assets',
+    ];
+
+
+    protected $casts = [
+        'supports_video' => 'boolean',
+        'supports_image' => 'boolean',
+        'max_assets' => 'integer',
     ];
 }

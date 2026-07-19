@@ -10,45 +10,50 @@ class Click extends Model
 {
     use HasFactory;
 
+
     /*
-|--------------------------------------------------------------------------
-| SCOPES
-|--------------------------------------------------------------------------
-*/
-
-public function scopeValid($query)
-{
-    return $query->where(
-        'status',
-        'valid'
-    );
-}
+    |--------------------------------------------------------------------------
+    | SCOPES
+    |--------------------------------------------------------------------------
+    */
 
 
-
-public function scopeSuspicious($query)
-{
-    return $query->where(
-        'status',
-        'suspicious'
-    );
-}
+    public function scopeValid($query)
+    {
+        return $query->where(
+            'status',
+            'valid'
+        );
+    }
 
 
 
-public function scopeRejected($query)
-{
-    return $query->where(
-        'status',
-        'rejected'
-    );
-}
+    public function scopeSuspicious($query)
+    {
+        return $query->where(
+            'status',
+            'suspicious'
+        );
+    }
+
+
+
+    public function scopeRejected($query)
+    {
+        return $query->where(
+            'status',
+            'rejected'
+        );
+    }
+
+
 
     /*
     |--------------------------------------------------------------------------
     | MASS ASSIGNMENT
     |--------------------------------------------------------------------------
     */
+
 
     protected $fillable = [
 
@@ -78,6 +83,7 @@ public function scopeRejected($query)
     |--------------------------------------------------------------------------
     */
 
+
     protected $casts = [
 
         'is_fraud' => 'boolean',
@@ -97,16 +103,6 @@ public function scopeRejected($query)
     {
         return $this->belongsTo(
             Ad::class
-        );
-    }
-
-
-
-    public function campaign(): BelongsTo
-    {
-        return $this->belongsTo(
-            Campaign::class,
-            'campaign_id'
         );
     }
 

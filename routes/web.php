@@ -1,8 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdPreviewController;
 use App\Http\Controllers\AdPublicController;
+use App\Http\Controllers\DashboardRedirectController;
+use App\Http\Controllers\ProfileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -10,9 +13,7 @@ use App\Http\Controllers\AdPublicController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
 
 /*
@@ -34,36 +35,12 @@ Route::get('/embed/zones/{token}', [
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
-
-    $user = auth()->user();
-
-    if (! $user) {
-        return redirect()
-            ->route('login');
-    }
-
-    return match ($user->role) {
-
-        'admin' => redirect()
-            ->route('admin.dashboard'),
-
-        'advertiser' => redirect()
-            ->route('advertiser.dashboard'),
-
-        'publisher' => redirect()
-            ->route('publisher.dashboard'),
-
-        default => abort(403),
-
-    };
-
-})
-->middleware([
-    'auth',
-    'verified'
-])
-->name('dashboard');
+Route::get('/dashboard', DashboardRedirectController::class)
+    ->middleware([
+        'auth',
+        'verified'
+    ])
+    ->name('dashboard');
 
 
 /*
@@ -73,6 +50,7 @@ Route::get('/dashboard', function () {
 */
 
 Route::middleware('auth')->group(function () {
+
 
     Route::get('/profile', [
         ProfileController::class,
@@ -101,18 +79,14 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/ad/{ad}', function ($adId) {
-
-        $ad = \App\Models\Ad::findOrFail($adId);
-
-        return view('ads.show', compact('ad'));
-
-    })
+    Route::get('/ad/{ad}', [
+        AdPreviewController::class,
+        'show'
+    ])
     ->name('ad.show');
 
 
-    Route::get('/pages/info', function () {
-    return view('pages.contact');
-})->middleware('auth')->name('pages.info');
+    Route::view('/pages/info', 'pages.contact')
+        ->name('pages.info');
 
 });

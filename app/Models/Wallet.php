@@ -9,8 +9,23 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Wallet extends Model
 {
     protected $fillable = [
+
         'owner_id',
+
         'owner_type',
+
+        'currency',
+
+        'status',
+
+    ];
+
+
+
+    protected $casts = [
+
+        'owner_id' => 'integer',
+
     ];
 
 
@@ -20,6 +35,7 @@ class Wallet extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
 
     public function owner(): MorphTo
     {
@@ -42,9 +58,10 @@ class Wallet extends Model
     | BALANCE
     |--------------------------------------------------------------------------
     |
-    | Calculated from approved ledger transactions.
+    | Calculated from approved wallet transactions.
     |
     */
+
 
     public function getBalanceAttribute(): float
     {
@@ -95,6 +112,7 @@ class Wallet extends Model
     |--------------------------------------------------------------------------
     */
 
+
     public static function forUser($user): ?self
     {
         return self::query()
@@ -116,6 +134,7 @@ class Wallet extends Model
     | STATE HELPERS
     |--------------------------------------------------------------------------
     */
+
 
     public function hasBalance(float $amount): bool
     {

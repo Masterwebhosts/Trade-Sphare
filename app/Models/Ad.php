@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Ad extends Model
 {
     use HasFactory;
-
 
 
     /*
@@ -34,21 +34,13 @@ class Ad extends Model
     */
 
     protected $fillable = [
-
         'campaign_id',
-
         'title',
-
         'description',
-
         'content_type',
-
         'media_url',
-
         'target_url',
-
         'status',
-
     ];
 
 
@@ -60,9 +52,7 @@ class Ad extends Model
     */
 
     protected $casts = [
-
         'campaign_id' => 'integer',
-
     ];
 
 
@@ -82,15 +72,17 @@ class Ad extends Model
         );
     }
 
+
     public function zones(): BelongsToMany
-{
-    return $this->belongsToMany(
-        AdZone::class,
-        'ad_zone_ads',
-        'ad_id',
-        'ad_zone_id'
-    );
-}
+    {
+        return $this->belongsToMany(
+            AdZone::class,
+            'ad_zone_ads',
+            'ad_id',
+            'ad_zone_id'
+        );
+    }
+
 
     public function impressions(): HasMany
     {
@@ -99,7 +91,6 @@ class Ad extends Model
             'ad_id'
         );
     }
-
 
 
     public function clicks(): HasMany
@@ -111,7 +102,6 @@ class Ad extends Model
     }
 
 
-
     public function adServes(): HasMany
     {
         return $this->hasMany(
@@ -119,7 +109,43 @@ class Ad extends Model
             'ad_id'
         );
     }
-    
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | TARGETING / REVIEWS / EVENTS
+    |--------------------------------------------------------------------------
+    */
+
+
+    public function targetings(): HasMany
+    {
+        return $this->hasMany(
+            AdTargeting::class,
+            'ad_id'
+        );
+    }
+
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(
+            AdReview::class,
+            'ad_id'
+        );
+    }
+
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(
+            AdEvent::class,
+            'ad_id'
+        );
+    }
+
+
+
     /*
     |--------------------------------------------------------------------------
     | OWNER
@@ -131,7 +157,6 @@ class Ad extends Model
     {
         return $this->campaign?->advertiser;
     }
-
 
 
     public function advertiser()
@@ -154,7 +179,6 @@ class Ad extends Model
     }
 
 
-
     public function canBeServed(): bool
     {
         return
@@ -164,7 +188,6 @@ class Ad extends Model
             &&
             $this->campaign->canServeAds();
     }
-
 
 
     public function isPending(): bool
@@ -190,7 +213,6 @@ class Ad extends Model
     }
 
 
-
     public function scopeServeable($query)
     {
         return $query
@@ -210,7 +232,6 @@ class Ad extends Model
                 }
             );
     }
-
 
 
     public function scopeEligible($query)

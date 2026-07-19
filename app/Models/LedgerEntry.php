@@ -2,23 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-
-/**
- * Deprecated model.
- *
- * Fraud tracking moved to:
- *
- * Click
- *   |
- * FraudDetectionService
- *
- * Keep this model only for legacy records.
- */
 class LedgerEntry extends Model
 {
     use HasFactory;
@@ -30,7 +17,7 @@ class LedgerEntry extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'ad_events';
+    protected $table = 'ledger_entries';
 
 
 
@@ -42,23 +29,17 @@ class LedgerEntry extends Model
 
     protected $fillable = [
 
-        'ad_id',
+        'wallet_id',
 
-        'ad_zone_id',
+        'direction',
 
-        'event_type',
+        'amount',
 
-        'ip',
+        'source_type',
 
-        'user_agent',
+        'source_id',
 
-        'device_hash',
-
-        'is_fraud',
-
-        'fraud_score',
-
-        'processed_at',
+        'balance_after',
 
     ];
 
@@ -72,11 +53,13 @@ class LedgerEntry extends Model
 
     protected $casts = [
 
-        'is_fraud' => 'boolean',
+        'wallet_id' => 'integer',
 
-        'fraud_score' => 'integer',
+        'amount' => 'decimal:2',
 
-        'processed_at' => 'datetime',
+        'source_id' => 'integer',
+
+        'balance_after' => 'decimal:2',
 
     ];
 
@@ -89,20 +72,10 @@ class LedgerEntry extends Model
     */
 
 
-    public function ad(): BelongsTo
+    public function wallet(): BelongsTo
     {
         return $this->belongsTo(
-            Ad::class
-        );
-    }
-
-
-
-    public function zone(): BelongsTo
-    {
-        return $this->belongsTo(
-            AdZone::class,
-            'ad_zone_id'
+            Wallet::class
         );
     }
 
@@ -115,14 +88,15 @@ class LedgerEntry extends Model
     */
 
 
-    public function isFraud(): bool
+    public function isCredit(): bool
     {
-        return (bool) $this->is_fraud;
+        return $this->direction === WalletTransaction::DIRECTION_CREDIT;
     }
 
 
-    public function isProcessed(): bool
+
+    public function isDebit(): bool
     {
-        return $this->processed_at !== null;
+        return $this->direction === WalletTransaction::DIRECTION_DEBIT;
     }
 }

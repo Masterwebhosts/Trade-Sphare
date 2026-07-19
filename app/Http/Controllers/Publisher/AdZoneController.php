@@ -70,6 +70,7 @@ class AdZoneController extends Controller
 
 
 
+
     public function store(Request $request)
     {
 
@@ -139,6 +140,31 @@ class AdZoneController extends Controller
                 'success',
                 'تم إنشاء المنطقة الإعلانية بنجاح'
             );
+    }
+
+
+
+
+
+    public function show($id)
+    {
+
+        $zone = AdZone::where(
+            'publisher_id',
+            auth()->id()
+        )
+        ->with([
+            'ads',
+            'governorate',
+        ])
+        ->findOrFail($id);
+
+
+
+        return view(
+            'publisher.zones.show',
+            compact('zone')
+        );
     }
 
 

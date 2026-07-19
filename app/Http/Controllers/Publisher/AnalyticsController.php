@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Publisher;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Services\PublisherStatsService;
+use Illuminate\Http\JsonResponse;
 
 class AnalyticsController extends Controller
 {
-    public function chart(Request $request)
+    public function chart(PublisherStatsService $publisherStats): JsonResponse
     {
-        return response()->json([
-            'labels' => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-            'data' => [12, 19, 7, 15, 22],
-        ]);
+        return response()->json(
+            $publisherStats->getLast7DaysChart(auth()->id())
+        );
     }
 }
