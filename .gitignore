@@ -22,3 +22,25 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+# Laravel cache
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Compiled views
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+
+# Laravel logs
+/storage/logs/*
+
+# Local SQLite database
+/database/*.sqlite
+/database/database.sqlite
+
+# Test artifacts
+.phpunit.result.cache
+
+# Runtime cache
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
