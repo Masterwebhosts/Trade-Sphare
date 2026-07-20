@@ -1,0 +1,247 @@
+/* =========================
+   WhatsApp Floating Button
+========================= */
+
+
+.wa-button{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+
+    width:55px;
+
+    height:55px;
+
+
+    border-radius:50%;
+
+
+    border:0;
+
+
+    background:#25D366;
+
+
+    color:white;
+
+
+    font-size:25px;
+
+
+    cursor:pointer;
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+
+    box-shadow:
+
+    0 10px 30px rgba(0,0,0,.3);
+
+
+    z-index:9000;
+
+
+    transition:.3s;
+
+}
+
+
+
+.wa-button:hover{
+
+    transform:scale(1.1);
+
+}
+
+
+
+
+
+/* =========================
+   WhatsApp Box
+========================= */
+
+
+.wa-box{
+
+    position:fixed;
+
+
+    right:25px;
+
+
+    bottom:95px;
+
+
+    width:300px;
+
+
+    background:white;
+
+
+    color:#333;
+
+
+    border-radius:20px;
+
+
+    overflow:hidden;
+
+
+    display:none;
+
+
+    box-shadow:
+
+    0 20px 50px rgba(0,0,0,.35);
+
+
+    z-index:9000;
+
+
+    direction:rtl;
+
+
+}
+
+
+
+
+
+.wa-header{
+
+    background:#25D366;
+
+
+    color:white;
+
+
+    padding:18px;
+
+
+    font-size:18px;
+
+
+    font-weight:bold;
+
+}
+
+
+
+
+
+.wa-message{
+
+    padding:20px;
+
+
+    line-height:1.8;
+
+
+    color:#334155;
+
+}
+
+
+
+
+
+.wa-option{
+
+    display:block;
+
+
+    margin:10px;
+
+
+    padding:13px;
+
+
+    text-align:center;
+
+
+    border-radius:12px;
+
+
+    background:#f1f5f9;
+
+
+    color:#111827;
+
+
+    text-decoration:none;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.wa-option:hover{
+
+    background:#25D366;
+
+
+    color:white;
+
+}
+
+
+
+
+
+/* =========================
+   Mobile
+========================= */
+
+
+@media(max-width:600px){
+
+
+
+.wa-button{
+
+    right:15px;
+
+
+    bottom:15px;
+
+
+    width:45px;
+
+
+    height:45px;
+
+
+    font-size:20px;
+
+}
+
+
+
+.wa-box{
+
+    right:15px;
+
+
+    bottom:75px;
+
+
+    width:270px;
+
+}
+
+
+
+}

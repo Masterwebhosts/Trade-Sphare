@@ -1,0 +1,561 @@
+/* =========================
+   Responsive Global
+========================= */
+
+
+/* Large Tablet / Small Laptop */
+
+@media(max-width:1200px){
+
+
+.container{
+
+    padding-left:25px;
+
+    padding-right:25px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:42px;
+
+}
+
+
+
+}
+
+
+
+
+
+/* =========================
+   Tablet
+========================= */
+
+
+@media(max-width:992px){
+
+
+
+/* Hero */
+
+
+.hero{
+
+    padding-top:130px;
+
+    padding-bottom:80px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:38px;
+
+}
+
+
+
+.hero p{
+
+    font-size:17px;
+
+}
+
+
+
+
+/* Buttons */
+
+
+.hero-actions{
+
+    flex-wrap:wrap;
+
+}
+
+
+
+
+
+/* Grids */
+
+
+.stats-grid,
+.features-grid,
+.steps-grid,
+.advertiser-grid,
+.formats-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+
+
+
+.publisher-wrapper,
+.api-wrapper{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.dashboard-box{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.dashboard-sidebar{
+
+    display:none;
+
+}
+
+
+
+
+.dashboard-cards{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+
+
+
+.footer-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+
+
+}
+
+
+
+
+
+
+/* =========================
+   Mobile
+========================= */
+
+
+@media(max-width:768px){
+
+
+
+body{
+
+    overflow-x:hidden;
+
+}
+
+
+
+/* Container */
+
+
+.container{
+
+    padding:0 15px;
+
+}
+
+
+
+/* Sections */
+
+
+section{
+
+    padding:60px 0;
+
+}
+
+
+
+
+
+/* Hero */
+
+
+.hero{
+
+    padding-top:110px;
+
+}
+
+
+
+.logo-image{
+
+    width:200px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:30px;
+
+    line-height:1.5;
+
+}
+
+
+
+.hero p{
+
+    font-size:15px;
+
+    line-height:1.8;
+
+}
+
+
+
+
+
+/* Buttons */
+
+
+.hero-actions{
+
+    flex-direction:column;
+
+    width:100%;
+
+}
+
+
+
+.hero-actions .button{
+
+    width:100%;
+
+}
+
+
+
+
+
+/* Titles */
+
+
+.section-title h2{
+
+    font-size:28px;
+
+}
+
+
+
+
+
+/* Cards */
+
+
+.card,
+.feature-card,
+.stat-card,
+.step-card{
+
+    padding:25px 20px;
+
+}
+
+
+
+
+
+/* All Grids One Column */
+
+
+.stats-grid,
+.features-grid,
+.steps-grid,
+.advertiser-grid,
+.formats-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+
+/* Publisher */
+
+
+.publisher-content h3{
+
+    font-size:28px;
+
+}
+
+
+
+.publisher-box{
+
+    padding:25px;
+
+}
+
+
+
+.earning-card strong{
+
+    font-size:35px;
+
+}
+
+
+
+
+
+/* Dashboard */
+
+
+.dashboard-content{
+
+    padding:20px;
+
+}
+
+
+
+.dashboard-cards{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.dash-card strong{
+
+    font-size:26px;
+
+}
+
+
+
+
+/* API */
+
+
+.api-content h3{
+
+    font-size:28px;
+
+}
+
+
+
+.code-box pre{
+
+    padding:20px;
+
+    font-size:13px;
+
+}
+
+
+
+
+/* FAQ */
+
+
+.faq-question{
+
+    font-size:16px;
+
+    padding:18px;
+
+}
+
+
+
+
+
+/* CTA */
+
+
+.cta-box{
+
+    padding:40px 20px;
+
+}
+
+
+
+.cta-box h2{
+
+    font-size:28px;
+
+}
+
+
+
+.cta-buttons{
+
+    flex-direction:column;
+
+}
+
+
+
+.cta-buttons .button{
+
+    width:100%;
+
+}
+
+
+
+
+/* Footer */
+
+
+.footer-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+.footer-brand h3{
+
+    font-size:25px;
+
+}
+
+
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   Small Mobile
+========================= */
+
+
+@media(max-width:480px){
+
+
+
+.brand img{
+
+    width:85px;
+
+}
+
+
+
+.hero h1{
+
+    font-size:26px;
+
+}
+
+
+
+.logo-image{
+
+    width:170px;
+
+}
+
+
+
+.stat-card h3{
+
+    font-size:34px;
+
+}
+
+
+
+.step-icon,
+.feature-icon,
+.format-icon{
+
+    transform:scale(.9);
+
+}
+
+
+
+.wa-button{
+
+    width:45px;
+
+    height:45px;
+
+}
+
+
+
+.wa-box{
+
+    width:270px;
+
+    right:15px;
+
+}
+
+
+
+}
+
+
+
+
+
+/* =========================
+   Landscape Mobile
+========================= */
+
+
+@media(max-height:500px) and (orientation:landscape){
+
+
+.hero{
+
+    padding-top:90px;
+
+}
+
+
+
+.navbar{
+
+    height:60px;
+
+}
+
+
+}

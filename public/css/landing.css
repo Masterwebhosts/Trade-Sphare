@@ -1,0 +1,417 @@
+/* =========================
+   Global Reset
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    font-family: 'Cairo', Tahoma, Arial, sans-serif;
+
+    background: #0f172a;
+
+    color: white;
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+
+}
+
+
+
+.container {
+
+    width: 100%;
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 0 20px;
+
+}
+
+
+
+
+/* =========================
+   Background
+========================= */
+
+
+.bg {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: -1;
+
+    background:
+
+        linear-gradient(-45deg,
+            #020617,
+            #0f172a,
+            #1e293b,
+            #111827);
+
+
+    background-size: 400% 400%;
+
+    animation: bgMove 15s ease infinite;
+
+}
+
+
+
+@keyframes bgMove {
+
+
+    0% {
+
+        background-position: 0% 50%;
+
+    }
+
+
+    50% {
+
+        background-position: 100% 50%;
+
+    }
+
+
+    100% {
+
+        background-position: 0% 50%;
+
+    }
+
+
+}
+
+
+
+
+/* =========================
+   Buttons
+========================= */
+
+
+.button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 14px 28px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    font-weight: bold;
+
+    transition: .3s;
+
+    cursor: pointer;
+
+}
+
+
+
+.primary {
+
+    background:
+
+        linear-gradient(135deg,
+            #2563eb,
+            #3b82f6);
+
+    color: white !important;
+
+}
+
+
+
+.primary:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+
+        0 10px 30px rgba(37, 99, 235, .4);
+
+}
+
+
+
+.secondary {
+
+    background:
+
+        rgba(255, 255, 255, .08);
+
+    border:
+
+        1px solid rgba(255, 255, 255, .15);
+
+    color: white;
+
+}
+
+
+
+.secondary:hover {
+
+    background:
+
+        rgba(255, 255, 255, .15);
+
+}
+
+
+
+
+
+/* =========================
+   Hero
+========================= */
+
+
+.hero {
+
+    padding-top: 150px;
+
+    padding-bottom: 100px;
+
+    text-align: center;
+
+}
+
+
+
+.logo-image {
+
+    width: 280px;
+
+    max-width: 80%;
+
+    margin-bottom: 25px;
+
+    filter:
+
+        drop-shadow(0 20px 30px rgba(0, 0, 0, .4));
+
+}
+
+
+
+.badge-brand {
+
+    display: inline-block;
+
+    padding: 8px 20px;
+
+    border-radius: 50px;
+
+    background:
+
+        rgba(59, 130, 246, .15);
+
+    color: #93c5fd;
+
+    border:
+
+        1px solid rgba(59, 130, 246, .3);
+
+}
+
+
+
+.hero h1 {
+
+    font-size: 48px;
+
+    margin: 25px 0 20px;
+
+}
+
+
+
+.hero p {
+
+    max-width: 750px;
+
+    margin: auto;
+
+    color: #cbd5e1;
+
+    line-height: 2;
+
+    font-size: 18px;
+
+}
+
+
+
+.hero-actions {
+
+    margin-top: 35px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 15px;
+
+}
+
+
+
+
+
+/* =========================
+   Sections
+========================= */
+
+
+section {
+
+    padding: 90px 0;
+
+}
+
+
+
+.section-title {
+
+    text-align: center;
+
+    margin-bottom: 50px;
+
+}
+
+
+
+.section-title h2 {
+
+    font-size: 36px;
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.section-title p {
+
+    color: #94a3b8;
+
+}
+
+
+
+
+/* =========================
+   Cards Base
+========================= */
+
+
+.card,
+.feature-card,
+.stat-card {
+
+    background:
+
+        rgba(255, 255, 255, .08);
+
+    border:
+
+        1px solid rgba(255, 255, 255, .1);
+
+    backdrop-filter: blur(15px);
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+}
+
+
+
+.stat-card {
+
+    text-align: center;
+
+}
+
+
+.stat-card h3 {
+
+    font-size: 42px;
+
+    color: #60a5fa;
+
+}
+
+
+.stat-card p {
+
+    color: #cbd5e1;
+
+    margin-top: 10px;
+
+}
+
+
+
+
+/* =========================
+   Scroll Animation
+========================= */
+
+
+section {
+
+    animation: fadeUp .7s ease both;
+
+}
+
+
+
+@keyframes fadeUp {
+
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(25px);
+
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+
+}
