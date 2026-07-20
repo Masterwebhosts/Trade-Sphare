@@ -44,3 +44,4 @@ Thumbs.db
 /storage/framework/cache/*
 /storage/framework/sessions/*
 /storage/framework/testing/*
+public_html
