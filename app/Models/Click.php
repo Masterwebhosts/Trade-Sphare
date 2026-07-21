@@ -61,6 +61,8 @@ class Click extends Model
         'ad_id',
 
         'publisher_id',
+        
+         'campaign_id',
 
         'zone_id',
 
@@ -90,6 +92,8 @@ class Click extends Model
 
         'ad_id' => 'integer',
 
+        'campaign_id' => 'integer',
+
         'publisher_id' => 'integer',
 
         'zone_id' => 'integer',
@@ -109,22 +113,30 @@ class Click extends Model
     */
 
     public function ad(): BelongsTo
-    {
-        return $this->belongsTo(
-            Ad::class,
-            'ad_id'
-        );
-    }
-
-    public function publisher(): BelongsTo
-    {
-        return $this->belongsTo(
-            User::class,
-            'publisher_id'
-        );
-    }
+{
+    return $this->belongsTo(
+        Ad::class,
+        'ad_id'
+    );
+}
 
 
+public function campaign(): BelongsTo
+{
+    return $this->belongsTo(
+        Campaign::class,
+        'campaign_id'
+    );
+}
+
+
+public function publisher(): BelongsTo
+{
+    return $this->belongsTo(
+        User::class,
+        'publisher_id'
+    );
+}
 
     public function zone(): BelongsTo
     {

@@ -166,25 +166,27 @@ class ClickService
 
                 return Click::create([
 
-                    'ad_id' => $ad->id,
+    'ad_id' => $ad->id,
 
-                    'publisher_id' => $zone->publisher_id,
+    'campaign_id' => $ad->campaign_id,
 
-                    'zone_id' => $zone->id,
+    'publisher_id' => $zone->publisher_id,
 
-                    'ip_address' => $ip,
+    'zone_id' => $zone->id,
 
-                    'user_agent' => substr(
-                        $ua,
-                        0,
-                        255
-                    ),
+    'ip_address' => $ip,
 
-                    'fingerprint' => $fingerprint,
+    'user_agent' => substr(
+        $ua,
+        0,
+        255
+    ),
 
-                    'is_fraud' => $isFraud,
+    'fingerprint' => $fingerprint,
 
-                ]);
+    'is_fraud' => $isFraud,
+
+]);
 
             });
 
