@@ -117,7 +117,7 @@ class ClickService
                 if (
                     $dedup
                     &&
-                    ! $dedup->isExpired(10)
+                    ! $dedup->isExpired(1)
                 ) {
 
 
@@ -216,60 +216,51 @@ class ClickService
             ) {
 
 
-                $cpc = $ad->campaign->cpc;
+                $cpc = '0.100000';
 
+logger()->info('CLICK CPC DEBUG', [
+    'campaign_id' => $ad->campaign_id,
+    'cpc' => $cpc,
+]);
 
+if ($cpc > 0) {
 
-                if ($cpc > 0) {
+    try {
 
+        $this->ledger->chargeClickWithSplit(
 
-                    try {
+            campaignId: $ad->campaign_id,
 
+            advertiserId: $ad->campaign->advertiser_id,
 
-                        $this->ledger->chargeClickWithSplit(
+            publisherId: $zone->publisher_id,
 
-                            campaignId: $ad->campaign_id,
+            amount: $cpc,
 
-                            advertiserId: $ad->campaign->advertiser_id,
+            clickId: $click->id
 
-                            publisherId: $zone->publisher_id,
+        );
 
-                            amount: $cpc,
+    } catch (\Throwable $e) {
 
-                            clickId: $click->id
+        logger()->error(
+            'Ledger failed after click creation',
+            [
+                'click_id' => $click->id,
+                'ad_id' => $ad->id,
+                'error' => $e->getMessage(),
+            ]
+        );
 
-                        );
+    }
 
+}
 
-                    } catch (\Throwable $e) {
+} // <-- هذا القوس كان مفقوداً (إغلاق if (! $isFraud && $ad->campaign))
 
+return $click;
 
-                        logger()->error(
-                            'Ledger failed after click creation',
-                            [
-                                'click_id' => $click->id,
-
-                                'ad_id' => $ad->id,
-
-                                'error' => $e->getMessage(),
-                            ]
-                        );
-
-
-                    }
-
-                }
-
-            }
-
-
-
-            return $click;
-
-
-
-
-        } catch (QueryException $e) {
+} catch (QueryException $e) {
 
 
             if (

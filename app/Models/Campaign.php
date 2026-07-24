@@ -168,13 +168,13 @@ class Campaign extends Model
 
 
         if (
-            $this->start_date &&
-            now()->lt($this->start_date)
-        ) {
+    $this->start_date &&
+    today()->lt($this->start_date)
+) {
 
-            return false;
+    return false;
 
-        }
+}
 
 
         if (

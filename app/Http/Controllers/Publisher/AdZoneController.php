@@ -15,7 +15,10 @@ class AdZoneController extends Controller
 
     public function index()
     {
-        $zones = AdZone::where('publisher_id', auth()->id())
+        $zones = AdZone::where(
+                'publisher_id',
+                auth()->id()
+            )
             ->withCount('ads')
             ->latest()
             ->get();
@@ -30,41 +33,80 @@ class AdZoneController extends Controller
 
     public function create()
     {
-        $governorates = Governorate::orderBy('name')->get();
+        $governorates = Governorate::orderBy('name')
+            ->get();
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | الإعلانات المتاحة للناشر
-        |--------------------------------------------------------------------------
-        | كل الإعلانات النشطة التابعة لحملات مقبولة
-        |--------------------------------------------------------------------------
-        */
+        return view(
+            'publisher.zones.create',
+            compact('governorates')
+        );
+    }
+
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Load Ads By Governorate
+    |--------------------------------------------------------------------------
+    */
+
+    public function adsByGovernorate(Request $request)
+    {
+
+        $request->validate([
+
+            'governorate_id' => [
+                'nullable',
+                'exists:governorates,id'
+            ],
+
+        ]);
+
+
 
         $ads = Ad::where(
                 'status',
                 Ad::STATUS_ACTIVE
             )
-            ->whereHas('campaign', function ($q) {
+            ->whereHas('campaign', function ($q) use ($request) {
+
 
                 $q->where(
                     'status',
                     Campaign::STATUS_APPROVED
                 );
 
+
+
+                if ($request->governorate_id) {
+
+                    $q->where(function ($query) use ($request) {
+
+                        $query
+                            ->whereNull('governorate_id')
+                            ->orWhere(
+                                'governorate_id',
+                                $request->governorate_id
+                            );
+
+                    });
+
+                }
+
+
             })
+            ->with([
+                'campaign:id,title,governorate_id'
+            ])
             ->latest()
             ->get();
 
 
 
-        return view(
-            'publisher.zones.create',
-            compact(
-                'governorates',
-                'ads'
-            )
-        );
+        return response()->json($ads);
+
     }
 
 
@@ -109,6 +151,13 @@ class AdZoneController extends Controller
 
 
 
+        $validAds = $this->filterAds(
+            $data['ads'] ?? [],
+            $data['governorate_id'] ?? null
+        );
+
+
+
         $zone = AdZone::create([
 
             'publisher_id' => auth()->id(),
@@ -120,17 +169,17 @@ class AdZoneController extends Controller
             'governorate_id' =>
                 $data['governorate_id'] ?? null,
 
-            'token' => Str::random(32),
+            'token' =>
+                Str::random(32),
 
-            'status' => AdZone::STATUS_ACTIVE,
+            'status' =>
+                AdZone::STATUS_ACTIVE,
 
         ]);
 
 
 
-        $zone->ads()->sync(
-            $data['ads'] ?? []
-        );
+        $zone->ads()->sync($validAds);
 
 
 
@@ -150,14 +199,14 @@ class AdZoneController extends Controller
     {
 
         $zone = AdZone::where(
-            'publisher_id',
-            auth()->id()
-        )
-        ->with([
-            'ads',
-            'governorate',
-        ])
-        ->findOrFail($id);
+                'publisher_id',
+                auth()->id()
+            )
+            ->with([
+                'ads',
+                'governorate'
+            ])
+            ->findOrFail($id);
 
 
 
@@ -165,6 +214,7 @@ class AdZoneController extends Controller
             'publisher.zones.show',
             compact('zone')
         );
+
     }
 
 
@@ -175,15 +225,16 @@ class AdZoneController extends Controller
     {
 
         $zone = AdZone::where(
-            'publisher_id',
-            auth()->id()
-        )
-        ->with('ads')
-        ->findOrFail($id);
+                'publisher_id',
+                auth()->id()
+            )
+            ->with('ads')
+            ->findOrFail($id);
 
 
 
-        $governorates = Governorate::orderBy('name')->get();
+        $governorates = Governorate::orderBy('name')
+            ->get();
 
 
 
@@ -212,6 +263,7 @@ class AdZoneController extends Controller
                 'ads'
             )
         );
+
     }
 
 
@@ -222,10 +274,10 @@ class AdZoneController extends Controller
     {
 
         $zone = AdZone::where(
-            'publisher_id',
-            auth()->id()
-        )
-        ->findOrFail($id);
+                'publisher_id',
+                auth()->id()
+            )
+            ->findOrFail($id);
 
 
 
@@ -264,11 +316,20 @@ class AdZoneController extends Controller
 
 
 
+        $validAds = $this->filterAds(
+            $data['ads'] ?? [],
+            $data['governorate_id'] ?? null
+        );
+
+
+
         $zone->update([
 
-            'name' => $data['name'],
+            'name' =>
+                $data['name'],
 
-            'zone_type' => $data['zone_type'],
+            'zone_type' =>
+                $data['zone_type'],
 
             'governorate_id' =>
                 $data['governorate_id'] ?? null,
@@ -277,9 +338,7 @@ class AdZoneController extends Controller
 
 
 
-        $zone->ads()->sync(
-            $data['ads'] ?? []
-        );
+        $zone->ads()->sync($validAds);
 
 
 
@@ -289,6 +348,7 @@ class AdZoneController extends Controller
                 'success',
                 'تم تحديث المنطقة بنجاح'
             );
+
     }
 
 
@@ -299,15 +359,14 @@ class AdZoneController extends Controller
     {
 
         $zone = AdZone::where(
-            'publisher_id',
-            auth()->id()
-        )
-        ->findOrFail($id);
+                'publisher_id',
+                auth()->id()
+            )
+            ->findOrFail($id);
 
 
 
         $zone->ads()->detach();
-
 
         $zone->delete();
 
@@ -318,6 +377,52 @@ class AdZoneController extends Controller
                 'success',
                 'تم حذف المنطقة'
             );
+
+    }
+
+
+
+
+
+    private function filterAds(
+        array $ads,
+        ?int $governorateId
+    ): array {
+
+
+        return Ad::whereIn(
+                'id',
+                $ads
+            )
+            ->whereHas('campaign', function ($q) use ($governorateId) {
+
+
+                $q->where(
+                    'status',
+                    Campaign::STATUS_APPROVED
+                );
+
+
+                if ($governorateId) {
+
+                    $q->where(function ($query) use ($governorateId) {
+
+                        $query
+                            ->whereNull('governorate_id')
+                            ->orWhere(
+                                'governorate_id',
+                                $governorateId
+                            );
+
+                    });
+
+                }
+
+
+            })
+            ->pluck('id')
+            ->toArray();
+
     }
 
 }

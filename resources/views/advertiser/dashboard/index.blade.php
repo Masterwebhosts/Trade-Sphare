@@ -94,7 +94,7 @@
                             <tr class="border-t hover:bg-gray-50">
 
                                 <td class="p-4 font-medium">
-                                    {{ $campaign->name }}
+                                    {{ $campaign->title }}
                                 </td>
 
                                 <td class="p-4">
@@ -171,7 +171,7 @@
                                 </td>
 
                                 <td class="p-4">
-                                    {{ $ad->campaign?->name ?? '-' }}
+                                    {{ $ad->campaign?->title ?? '-' }}
                                 </td>
 
                                 <td class="p-4">

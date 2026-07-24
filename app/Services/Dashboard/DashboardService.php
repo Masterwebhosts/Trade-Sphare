@@ -204,37 +204,33 @@ class DashboardService
 
         return [
 
-            'campaigns_count' =>
-                $campaignIds->count(),
+    'campaigns' =>
+        $campaignIds->count(),
 
+    'ads' =>
+        $adsQuery->count(),
 
-            'ads_count' =>
-                $adsQuery->count(),
+    'active_ads' =>
+        Ad::whereIn('campaign_id', $campaignIds)
+            ->where('status', 'active')
+            ->count(),
 
+    'clicks' =>
+        $clickCount,
 
-            'active_ads' =>
-                $adsQuery->count(),
+    'impressions' =>
+        $impressionCount,
 
+    'ctr' =>
+        $this->ctr(
+            $clickCount,
+            $impressionCount
+        ),
 
-            'clicks' =>
-                $clickCount,
+    'total_spent' =>
+        abs($spent),
 
-
-            'impressions' =>
-                $impressionCount,
-
-
-            'ctr' =>
-                $this->ctr(
-                    $clickCount,
-                    $impressionCount
-                ),
-
-
-            'spent' =>
-                $spent,
-
-        ];
+];
     }
 
 
@@ -406,26 +402,26 @@ class DashboardService
 
                     ->get()
 
-                    ->map(function ($zone) {
+                 ->map(function ($zone) {
 
-                        return [
+    return [
 
-                            'ad_zone_id' =>
-                                $zone->zone_id,
+        'zone_id' =>
+            $zone->zone_id,
 
-                            'name' =>
-                                $zone->name
-                                ?: ('Zone #' . $zone->zone_id),
+        'name' =>
+            $zone->name ?: ('Zone #' . $zone->zone_id),
 
-                            'clicks' =>
-                                (int) $zone->clicks,
+        'clicks' =>
+            (int) $zone->clicks,
 
-                            'earnings' =>
-                                (float) $zone->earnings,
+        'earnings' =>
+            (float) $zone->earnings,
 
-                        ];
+    ];
 
-                    })
+})   
+                    
 
                     ->toArray();
 

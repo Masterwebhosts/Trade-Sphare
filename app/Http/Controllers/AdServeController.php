@@ -4,14 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Ad;
 use App\Models\AdZone;
+use App\Services\Tracking\ImpressionService;
+use Illuminate\Http\Request;
+
 
 class AdServeController extends Controller
 {
+
+    public function __construct(
+        protected ImpressionService $impressionService
+    ){
+    }
+
     /**
      * SERVE AD BY ZONE TOKEN
      */
-    public function serve(string $token)
-    {
+    
+     public function serve(
+    Request $request,
+    string $token
+)
+{
 
         /*
         |--------------------------------------------------------------------------
@@ -25,8 +38,10 @@ class AdServeController extends Controller
 
 
         if (! $zone) {
+
             return response()
                 ->view('ads.empty');
+
         }
 
 
@@ -43,7 +58,15 @@ class AdServeController extends Controller
 
                 $query->where(
                     'status',
-                    'active'
+                    'approved'
+                );
+
+            })
+            ->whereHas('zones', function ($query) use ($zone) {
+
+                $query->where(
+                    'ad_zones.id',
+                    $zone->id
                 );
 
             })
@@ -72,7 +95,26 @@ class AdServeController extends Controller
 
         /*
         |--------------------------------------------------------------------------
-        | 4. Render
+        | 4. Record Impression
+        |--------------------------------------------------------------------------
+        */
+
+        $this->impressionService->record(
+            $ad,
+            request(),
+            [
+                'zone' => $zone,
+                'publisher_id' => $zone->publisher_id,
+                'zone_id' => $zone->id,
+                'channel' => 'embed',
+            ]
+        );
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | 5. Render
         |--------------------------------------------------------------------------
         */
 

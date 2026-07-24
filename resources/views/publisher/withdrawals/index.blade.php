@@ -14,7 +14,7 @@
     <div class="bg-white shadow rounded-xl p-5">
         <div class="text-sm text-gray-500">الرصيد المتاح</div>
         <div class="text-3xl font-bold text-green-600">
-            ${{ number_format($balance, 4) }}
+            ${{ number_format($balance, 2) }}
         </div>
     </div>
 

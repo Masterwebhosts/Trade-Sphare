@@ -40,17 +40,17 @@
         @method('PUT')
 
         {{-- NAME --}}
-        <div>
-            <label class="block mb-2 font-medium text-gray-700">
-                اسم الحملة
-            </label>
+<div>
+    <label class="block mb-2 font-medium text-gray-700">
+        اسم الحملة
+    </label>
 
-            <input type="text"
-                   name="title"
-                   value="{{ old('title', $campaign->title) }}"
-                   class="w-full border rounded-lg p-3"
-                   required>
-        </div>
+    <input type="text"
+           name="name"
+           value="{{ old('name', $campaign->title) }}"
+           class="w-full border rounded-lg p-3"
+           required>
+</div>
 
         {{-- TOTAL BUDGET --}}
         <div>
@@ -67,19 +67,19 @@
         </div>
 
         {{-- CPC --}}
-        <div>
-            <label class="block mb-2 font-medium text-gray-700">
-                سعر النقرة (CPC $)
-            </label>
+<div>
+    <label class="block mb-2 font-medium text-gray-700">
+        سعر النقرة
+    </label>
 
-            <input type="number"
-                   step="0.01"
-                   name="cpc"
-                   value="{{ old('cpc', $campaign->cpc ?? 0) }}"
-                   class="w-full border rounded-lg p-3"
-                   required>
-        </div>
+    <div class="w-full border rounded-lg p-3 bg-gray-50">
+        10 سنت
+    </div>
 
+    <p class="text-sm text-gray-500 mt-1">
+        سعر النقرة ثابت لجميع الحملات.
+    </p>
+</div>
         {{-- DAILY BUDGET --}}
         <div>
             <label class="block mb-2 font-medium text-gray-700">

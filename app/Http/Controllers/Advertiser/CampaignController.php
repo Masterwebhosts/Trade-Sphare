@@ -9,53 +9,52 @@ use App\Models\Click;
 use App\Models\Governorate;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class CampaignController extends Controller
 {
     public function index()
-{
-    $campaigns = Campaign::query()
-        ->where('advertiser_id', auth()->id())
-        ->latest()
-        ->withCount('ads')
-        ->paginate(20);
+    {
+        $campaigns = Campaign::query()
+         ->where('advertiser_id', auth()->id())
+         ->latest()
+         ->with('ads.clicks')
+         ->paginate(20);
 
-    $campaignIds = $campaigns->pluck('id');
+        $campaignIds = $campaigns->pluck('id');
 
-    $adsCount = Ad::whereIn('campaign_id', $campaignIds)->count();
+        $adsCount = Ad::whereIn('campaign_id', $campaignIds)->count();
 
-    $activeAds = Ad::whereIn('campaign_id', $campaignIds)
-        ->where('status', 'active')
-        ->count();
+        $activeAds = Ad::whereIn('campaign_id', $campaignIds)
+            ->where('status', 'active')
+            ->count();
 
-    $clicks = Click::whereIn('ad_id', function ($query) use ($campaignIds) {
-        $query->select('id')
-            ->from('ads')
-            ->whereIn('campaign_id', $campaignIds);
-    })->count();
+        $clicks = Click::whereIn('ad_id', function ($query) use ($campaignIds) {
+            $query->select('id')
+                ->from('ads')
+                ->whereIn('campaign_id', $campaignIds);
+        })->count();
 
-    $totalSpent = WalletTransaction::query()
-        ->where('type', WalletTransaction::TYPE_CAMPAIGN_CHARGE)
-        ->where('direction', WalletTransaction::DIRECTION_DEBIT)
-        ->where('status', WalletTransaction::STATUS_APPROVED)
-        ->whereIn('meta->campaign_id', $campaignIds)
-        ->sum('amount');
+        $totalSpent = WalletTransaction::query()
+            ->where('type', WalletTransaction::TYPE_CAMPAIGN_CHARGE)
+            ->where('direction', WalletTransaction::DIRECTION_DEBIT)
+            ->where('status', WalletTransaction::STATUS_APPROVED)
+            ->whereIn('meta->campaign_id', $campaignIds)
+            ->sum('amount');
 
-    return view('advertiser.campaigns.index', compact(
-        'campaigns',
-        'adsCount',
-        'activeAds',
-        'clicks',
-        'totalSpent'
-    ));
-}
+        return view('advertiser.campaigns.index', compact(
+            'campaigns',
+            'adsCount',
+            'activeAds',
+            'clicks',
+            'totalSpent'
+        ));
+    }
 
 
     public function create()
     {
-        $governorates = Governorate::orderBy('name')
-            ->get();
-
+        $governorates = Governorate::orderBy('name')->get();
 
         return view('advertiser.campaigns.create', compact(
             'governorates'
@@ -64,11 +63,8 @@ class CampaignController extends Controller
 
 
 
-
-
     public function store(Request $request)
     {
-
         $data = $request->validate([
 
             'name' => [
@@ -77,12 +73,10 @@ class CampaignController extends Controller
                 'max:255'
             ],
 
-
             'description' => [
                 'nullable',
                 'string'
             ],
-
 
             'budget_total' => [
                 'required',
@@ -90,19 +84,16 @@ class CampaignController extends Controller
                 'min:0.01'
             ],
 
-
             'cpc' => [
-                'required',
+                'nullable',
                 'numeric',
-                'min:0.01'
+                'min:5'
             ],
-
 
             'start_date' => [
                 'required',
                 'date'
             ],
-
 
             'end_date' => [
                 'required',
@@ -110,16 +101,33 @@ class CampaignController extends Controller
                 'after_or_equal:start_date'
             ],
 
-
             'governorate_id' => [
                 'nullable',
                 'exists:governorates,id'
             ],
 
-
         ]);
 
 
+        // CPC بالسنت
+        // الافتراضي 10 سنت
+        $cpcCents = $data['cpc'] ?? 10;
+
+
+        if ($cpcCents < 5) {
+
+            throw ValidationException::withMessages([
+                'cpc' => 'الحد الأدنى لسعر النقرة هو 5 سنت'
+            ]);
+
+        }
+
+
+        $cpc = bcdiv(
+            (string) $cpcCents,
+            '100',
+            6
+        );
 
 
         Campaign::create([
@@ -130,30 +138,23 @@ class CampaignController extends Controller
 
             'description' => $data['description'] ?? null,
 
-
             'budget_total' => $data['budget_total'],
 
             'budget_spent' => 0,
 
             'budget_remaining' => $data['budget_total'],
 
-
-            'cpc' => $data['cpc'],
-
+            'cpc' => $cpc,
 
             'governorate_id' => $data['governorate_id'] ?? null,
-
 
             'start_date' => $data['start_date'],
 
             'end_date' => $data['end_date'],
 
-
             'status' => Campaign::STATUS_PENDING,
 
         ]);
-
-
 
 
         return redirect()
@@ -166,12 +167,9 @@ class CampaignController extends Controller
 
 
 
-
-
     public function show(Campaign $campaign)
     {
         $this->authorizeOwner($campaign);
-
 
         return view(
             'advertiser.campaigns.show',
@@ -181,39 +179,29 @@ class CampaignController extends Controller
 
 
 
-
-
     public function edit(Campaign $campaign)
     {
         $this->authorizeOwner($campaign);
 
-
-
         return view(
             'advertiser.campaigns.edit',
             [
-
                 'campaign' => $campaign,
 
-                'governorates' => Governorate::orderBy('name')->get(),
-
+                'governorates' =>
+                    Governorate::orderBy('name')->get(),
             ]
         );
     }
 
 
 
-
-
     public function update(Request $request, Campaign $campaign)
     {
-
         $this->authorizeOwner($campaign);
 
 
-
         $data = $request->validate([
-
 
             'name' => [
                 'required',
@@ -221,12 +209,10 @@ class CampaignController extends Controller
                 'max:255'
             ],
 
-
             'description' => [
                 'nullable',
                 'string'
             ],
-
 
             'budget_total' => [
                 'required',
@@ -234,19 +220,16 @@ class CampaignController extends Controller
                 'min:0.01'
             ],
 
-
             'cpc' => [
-                'required',
+                'nullable',
                 'numeric',
-                'min:0.01'
+                'min:5'
             ],
-
 
             'start_date' => [
                 'required',
                 'date'
             ],
-
 
             'end_date' => [
                 'required',
@@ -254,29 +237,40 @@ class CampaignController extends Controller
                 'after_or_equal:start_date'
             ],
 
-
             'governorate_id' => [
                 'nullable',
                 'exists:governorates,id'
             ],
 
-
         ]);
 
 
+        $cpcCents = $data['cpc'] ?? 10;
+
+
+        if ($cpcCents < 5) {
+
+            throw ValidationException::withMessages([
+                'cpc' => 'الحد الأدنى لسعر النقرة هو 5 سنت'
+            ]);
+
+        }
+
+
+        $cpc = bcdiv(
+            (string) $cpcCents,
+            '100',
+            6
+        );
 
 
         $campaign->update([
 
-
             'title' => $data['name'],
-
 
             'description' => $data['description'] ?? null,
 
-
             'budget_total' => $data['budget_total'],
-
 
             'budget_remaining' =>
                 max(
@@ -284,25 +278,16 @@ class CampaignController extends Controller
                     $data['budget_total'] - $campaign->budget_spent
                 ),
 
-
-
-            'cpc' => $data['cpc'],
-
+            'cpc' => $cpc,
 
             'governorate_id' =>
                 $data['governorate_id'] ?? null,
 
-
-
             'start_date' => $data['start_date'],
-
 
             'end_date' => $data['end_date'],
 
-
         ]);
-
-
 
 
         return redirect()
@@ -315,15 +300,11 @@ class CampaignController extends Controller
 
 
 
-
-
     public function destroy(Campaign $campaign)
     {
         $this->authorizeOwner($campaign);
 
-
         $campaign->delete();
-
 
         return redirect()
             ->route('advertiser.campaigns.index')
@@ -335,15 +316,11 @@ class CampaignController extends Controller
 
 
 
-
-
     private function authorizeOwner(Campaign $campaign): void
     {
-
         abort_if(
             $campaign->advertiser_id !== auth()->id(),
             403
         );
-
     }
 }

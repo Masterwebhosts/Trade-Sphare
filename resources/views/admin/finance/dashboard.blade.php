@@ -35,7 +35,7 @@
             </div>
 
             <div class="text-3xl font-bold text-red-600 mt-2">
-                ${{ number_format($totalWithdrawals, 2) }}
+               ${{ number_format($totalWithdrawals, 6) }}
             </div>
 
         </div>
@@ -50,7 +50,7 @@
             </div>
 
             <div class="text-3xl font-bold text-blue-600 mt-2">
-                ${{ number_format($platformRevenue, 6) }}
+                ${{ number_format($platformRevenue, (round($platformRevenue, 2) != $platformRevenue ? 3 : 2)) }}
             </div>
 
         </div>

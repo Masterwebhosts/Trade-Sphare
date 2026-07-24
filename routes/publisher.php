@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Publisher\DashboardController;
 use App\Http\Controllers\Publisher\AdZoneController;
 use App\Http\Controllers\Publisher\WalletController;
-use App\Http\Controllers\Publisher\EarningsController;
 use App\Http\Controllers\Publisher\AnalyticsController;
 use App\Http\Controllers\Publisher\ZoneAnalyticsController;
 use App\Http\Controllers\Publisher\WithdrawalController;
@@ -14,16 +13,18 @@ Route::middleware(['auth', 'role:publisher'])
     ->name('publisher.')
     ->group(function () {
 
+    Route::get('/ads-by-governorate', [
+    AdZoneController::class,
+    'adsByGovernorate'
+])
+->name('ads.by.governorate');
+
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('dashboard');
 
 
         Route::get('/wallet', [WalletController::class, 'index'])
             ->name('wallet.index');
-
-
-        Route::get('/earnings', [EarningsController::class, 'index'])
-            ->name('earnings.index');
 
 
         Route::get('/withdrawals', [WithdrawalController::class, 'index'])
@@ -35,16 +36,21 @@ Route::middleware(['auth', 'role:publisher'])
 
 
         /*
-        |--------------------------------------------------------------------------
-        | Zones
-        |--------------------------------------------------------------------------
-        */
+        /*
+|--------------------------------------------------------------------------
+| Zones
+|--------------------------------------------------------------------------
+*/
 
-        Route::resource('zones', AdZoneController::class);
+     Route::get(
+    '/zones/ads',
+    [AdZoneController::class, 'adsByGovernorate']
+      )->name('zones.ads');
 
+    Route::resource('zones', AdZoneController::class);
 
-        Route::get('/zones/{id}/analytics', [ZoneAnalyticsController::class, 'index'])
-            ->name('zones.analytics');
+    Route::get('/zones/{id}/analytics', [ZoneAnalyticsController::class, 'index'])
+       ->name('zones.analytics');
 
 
         /*

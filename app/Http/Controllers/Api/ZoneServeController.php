@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AdZone;
 use App\Services\AdService;
+use App\Services\Tracking\ImpressionService;
+use Illuminate\Http\Request;
 
 class ZoneServeController extends Controller
 {
@@ -15,7 +17,9 @@ class ZoneServeController extends Controller
      */
     public function serve(
         string $token,
-        AdService $adService
+        AdService $adService,
+        Request $request,
+        ImpressionService $impressionService
     ) {
 
         /*
@@ -26,7 +30,6 @@ class ZoneServeController extends Controller
 
         $zone = AdZone::where('token', $token)
             ->first();
-
 
 
         if (! $zone) {
@@ -81,6 +84,27 @@ class ZoneServeController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | Record Impression
+        |--------------------------------------------------------------------------
+        */
+
+        if ($ad) {
+
+            $impressionService->record(
+                $ad,
+                $request,
+                [
+                    'zone' => $zone,
+                    'channel' => 'api',
+                ]
+            );
+
+        }
+
+
+
+        /*
+        |--------------------------------------------------------------------------
         | JSON Response
         |--------------------------------------------------------------------------
         */
@@ -88,7 +112,6 @@ class ZoneServeController extends Controller
         return response()->json([
 
             'success' => $ad !== null,
-
 
             'data' => $ad ? [
 
