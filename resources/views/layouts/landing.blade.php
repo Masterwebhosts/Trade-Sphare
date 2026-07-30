@@ -12,33 +12,28 @@
 @yield('title','Trade Sphare | منصة إعلانية متكاملة')
 </title>
 
-
-
-<meta name="description" content="
-أعلاني منصة إعلانية متكاملة تساعد الشركات والأفراد على إنشاء الحملات الإعلانية والوصول للعملاء ومتابعة الأداء والأرباح.
-">
-
-
+<meta name="description" content="Trade Sphare منصة إعلانية رقمية تربط المعلنين بالناشرين، تساعد الشركات على إنشاء الحملات الإعلانية والوصول إلى العملاء المستهدفين، وتمكّن أصحاب المواقع والمحتوى من تحقيق الأرباح.">
 
 <meta name="keywords" content="
-إعلانات,
-تسويق رقمي,
-حملات إعلانية,
+Trade Sphare,
 إعلانات سوريا,
 منصة إعلانية,
-أعلاني
+الإعلان الرقمي,
+حملات إعلانية,
+تسويق رقمي,
+ناشرين,
+المعلنين,
+الربح من المحتوى
 ">
-
-
 
 <meta name="author" content="Trade Sphare">
 
-
-
-<meta property="og:title" content="Trade Sphare | منصة إعلانية متكاملة">
+<meta property="og:title" content="@yield('title','Trade Sphare | منصة إعلانية متكاملة')">
 
 <meta property="og:description"
-content="إدارة حملاتك الإعلانية والوصول إلى العملاء المناسبين من مكان واحد.">
+content="Trade Sphare منصة إعلانية تساعد المعلنين على الوصول إلى العملاء وتمكّن الناشرين من تحقيق دخل من محتواهم.">
+
+<link rel="canonical" href="{{ url()->current() }}">
 
 <meta property="og:type" content="website">
 
@@ -55,6 +50,8 @@ content="{{ url('/') }}">
 <meta name="twitter:title"
 content="Trade Sphare | منصة إعلانية">
 
+<meta name="twitter:description"
+content="أنشئ حملات إعلانية واستفد من شبكة الناشرين مع Trade Sphare.">
 
 <meta name="twitter:image"
 content="{{ asset('assets/images/logo.png') }}">
@@ -103,6 +100,23 @@ href="{{ asset('css/whatsapp.css') }}">
 
 @stack('styles')
 
+
+<script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"Organization",
+ "name":"Trade Sphare",
+ "url":"https://tradesphare.com",
+ "logo":"{{ asset('assets/images/logo.png') }}",
+ "description":"منصة إعلانية رقمية تربط المعلنين بالناشرين.",
+ "email":"info@tradesphare.com",
+ "telephone":"+963932224359",
+ "address":{
+   "@type":"PostalAddress",
+   "addressCountry":"SY"
+ }
+}
+</script>
 
 </head>
 
