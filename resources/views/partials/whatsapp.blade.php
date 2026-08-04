@@ -1,37 +1,36 @@
 <div class="wa-box" id="waBox">
 
 
-<div class="wa-header">
+    <div class="wa-header">
 
-مرحباً بك 👋
+        مرحباً بك 👋
 
-</div>
-
-
-<div class="wa-message">
-
-أهلاً بك في أعلاني<br>
-
-كيف يمكننا مساعدتك؟
-
-</div>
+    </div>
 
 
-<a href="https://tradesphare.com/pages/info"
-class="wa-option">
+    <div class="wa-message">
 
-📚 مركز المساعدة
+        أهلاً بك في Trade Sphare<br>
+        كيف يمكننا مساعدتك؟
 
-</a>
+    </div>
 
 
-<a href="https://wa.me/96179168899"
-target="_blank"
-class="wa-option">
+    <a href="https://tradesphare.com/blog/"
+       class="wa-option">
 
-💬 تواصل واتساب
+        📚 مركز المساعدة
 
-</a>
+    </a>
+
+
+    <a href="https://wa.me/96179168899"
+       target="_blank"
+       class="wa-option">
+
+        💬 تواصل واتساب
+
+    </a>
 
 
 </div>
@@ -40,6 +39,6 @@ class="wa-option">
 
 <button class="wa-button" onclick="toggleWA()">
 
-💬
+    💬
 
 </button>
