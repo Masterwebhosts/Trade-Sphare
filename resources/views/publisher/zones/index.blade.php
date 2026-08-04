@@ -116,8 +116,7 @@
                    @php
 
     $script = "<script src='" .
-        asset('js/serve.js') .
-        "?v=" . filemtime(public_path('js/serve.js')) .
+        asset('js/serve.js') . '?v=' . filemtime(public_path('js/serve.js')) .
         "' data-zone='" .
         $zone->token .
         "' data-base='" .
