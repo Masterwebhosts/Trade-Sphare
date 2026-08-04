@@ -138,7 +138,7 @@
 
                 a.addEventListener('click', function () {
 
-                    fetch(`${baseUrl}/api/zones/${zoneId}/click`, {
+                    fetch(`${baseUrl}/api/track/click`, {
 
                         method: 'POST',
 
@@ -151,9 +151,8 @@
                         },
 
                         body: JSON.stringify({
-
-                            ad_id: ad.id
-
+                            ad_id: ad.id,
+                            zone_token: zoneId
                         })
 
                     }).catch(() => { });
@@ -177,7 +176,7 @@
 
 
             // IMPRESSION
-            fetch(`${baseUrl}/api/zones/${zoneId}/impression`, {
+            fetch(`${baseUrl}/api/track/impression`, {
 
                 method: 'POST',
 
@@ -188,11 +187,9 @@
                     'Accept': 'application/json'
 
                 },
-
                 body: JSON.stringify({
-
-                    ad_id: ad.id
-
+                    ad_id: ad.id,
+                    zone_token: zoneId
                 })
 
             }).catch(() => { });
