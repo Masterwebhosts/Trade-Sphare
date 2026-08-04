@@ -15,28 +15,26 @@ class AdController extends Controller
     {
 
         $ads = Ad::with('campaign')
-            ->whereHas('campaign', function ($query) {
+    ->withCount([
+        'impressions',
+        'clicks'
+    ])
+    ->whereHas('campaign', function ($query) {
 
-                $query->where(
-                    'advertiser_id',
-                    auth()->id()
-                );
+        $query->where(
+            'advertiser_id',
+            auth()->id()
+        );
 
-            })
-            ->latest()
-            ->paginate(10);
-
-
+    })
+    ->latest()
+    ->paginate(10);
 
         return view(
             'advertiser.ads.index',
             compact('ads')
         );
     }
-
-
-
-
 
     public function create()
     {
@@ -68,10 +66,6 @@ class AdController extends Controller
             )
         );
     }
-
-
-
-
 
     public function store(Request $request)
     {
@@ -120,21 +114,12 @@ class AdController extends Controller
 
         ]);
 
-
-
-
-
         $campaign = Campaign::where('id', $data['campaign_id'])
             ->where(
                 'advertiser_id',
                 auth()->id()
             )
             ->firstOrFail();
-
-
-
-
-
 
         $ad = Ad::create([
 
@@ -165,14 +150,10 @@ class AdController extends Controller
 
 
 
-            'status' => 'pending_review',
+            'status' => Ad::STATUS_PENDING,
 
 
         ]);
-
-
-
-
 
         return redirect()
             ->route('advertiser.ads.index')
@@ -191,17 +172,11 @@ class AdController extends Controller
 
         $this->authorizeAd($ad);
 
-
-
-        $campaigns = Campaign::where(
-                'advertiser_id',
-                auth()->id()
-            )
-            ->orderBy('title')
-            ->get();
-
-
-
+        $campaigns = Campaign::where('advertiser_id', auth()->id())
+          ->where('status', Campaign::STATUS_APPROVED)
+          ->where('budget_remaining', '>', 0)
+          ->latest()
+          ->get();
 
         return view(
             'advertiser.ads.edit',
@@ -213,27 +188,17 @@ class AdController extends Controller
 
     }
 
-
-
-
-
     public function update(Request $request, Ad $ad)
     {
 
-
         $this->authorizeAd($ad);
 
-
-
-
         $data = $request->validate([
-
 
             'campaign_id' => [
                 'required',
                 'exists:campaigns,id'
             ],
-
 
             'title' => [
                 'required',
@@ -269,21 +234,11 @@ class AdController extends Controller
 
         ]);
 
-
-
-
-
-
         $campaign = Campaign::where('id', $data['campaign_id'])
-            ->where(
-                'advertiser_id',
-                auth()->id()
-            )
+            ->where('advertiser_id', auth()->id())
+            ->where('status', Campaign::STATUS_APPROVED)
+            ->where('budget_remaining', '>', 0)
             ->firstOrFail();
-
-
-
-
 
 
         $ad->update([
@@ -313,10 +268,6 @@ class AdController extends Controller
         ]);
 
 
-
-
-
-
         return back()
             ->with(
                 'success',
@@ -325,19 +276,13 @@ class AdController extends Controller
 
     }
 
-
-
-
-
     public function destroy(Ad $ad)
     {
 
         $this->authorizeAd($ad);
 
 
-
         $ad->delete();
-
 
 
         return back()
@@ -347,10 +292,6 @@ class AdController extends Controller
             );
 
     }
-
-
-
-
 
     private function authorizeAd(Ad $ad): void
     {

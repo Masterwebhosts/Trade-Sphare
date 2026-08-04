@@ -115,15 +115,15 @@
 
                     @php
 
-                        $script = "<script src='" .
-                        asset('js/serve.js') .
-                        "' data-zone='" .
-                        $zone->token .
-                        "'></script>";
+    $script = "<script src='" .
+        asset('js/serve.js') .
+        "' data-zone='" .
+        $zone->token .
+        "' data-base='" .
+        url('/') .
+        "'></script>";
 
-                    @endphp
-
-
+@endphp
 
                     <div class="bg-gray-50 p-3 rounded-lg space-y-2">
 

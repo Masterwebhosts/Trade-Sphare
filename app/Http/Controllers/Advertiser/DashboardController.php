@@ -23,11 +23,12 @@ class DashboardController extends Controller
         ->get();
 
         // 📦 الإعلانات (عبر الحملات الخاصة بالمستخدم)
-        $ads = Ad::whereHas('campaign', function ($q) use ($userId) {
-    $q->where('advertiser_id', $userId);
+        $ads = Ad::with('campaign')
+        ->whereHas('campaign', function ($q) use ($userId) {
+        $q->where('advertiser_id', $userId);
     })
-     ->latest()
-     ->get();
+        ->latest()
+        ->get();
         return view('advertiser.dashboard.index', compact(
             'stats',
             'campaigns',

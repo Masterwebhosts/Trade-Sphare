@@ -7,16 +7,17 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="manifest" href="{{ asset('manifest.json') }}">
 
 <title>
-@yield('title','أعلاني | منصة إعلانية متكاملة')
+@yield('title','Trade Sphare | منصة إعلانية متكاملة')
 </title>
+
 
 
 <meta name="description" content="
 أعلاني منصة إعلانية متكاملة تساعد الشركات والأفراد على إنشاء الحملات الإعلانية والوصول للعملاء ومتابعة الأداء والأرباح.
 ">
+
 
 
 <meta name="keywords" content="
@@ -29,77 +30,79 @@
 ">
 
 
-<meta name="author" content="أعلاني">
+
+<meta name="author" content="Trade Sphare">
 
 
 
-<!-- Open Graph -->
+<meta property="og:title" content="Trade Sphare | منصة إعلانية متكاملة">
 
-<meta property="og:title" content="أعلاني | منصة إعلانية متكاملة">
-
-
-<meta property="og:description" content="
-إدارة حملاتك الإعلانية والوصول إلى العملاء المناسبين من مكان واحد.
-">
-
+<meta property="og:description"
+content="إدارة حملاتك الإعلانية والوصول إلى العملاء المناسبين من مكان واحد.">
 
 <meta property="og:type" content="website">
 
+<meta property="og:image"
+content="{{ asset('assets/images/logo.png') }}">
 
-<meta property="og:image" content="{{ asset('assets/images/logo.png') }}">
+<meta property="og:url"
+content="{{ url('/') }}">
 
 
-<meta property="og:url" content="{{ url('/') }}">
-
-
-
-<!-- Twitter -->
 
 <meta name="twitter:card" content="summary_large_image">
 
-
-<meta name="twitter:title" content="أعلاني | منصة إعلانية">
-
-
-<meta name="twitter:description" content="
-حلول إعلانية ذكية للشركات والأفراد.
-">
+<meta name="twitter:title"
+content="Trade Sphare | منصة إعلانية">
 
 
-<meta name="twitter:image" content="{{ asset('assets/images/logo.png') }}">
+<meta name="twitter:image"
+content="{{ asset('assets/images/logo.png') }}">
 
 
 
-<!-- PWA -->
+{{-- FAVICON --}}
 
-<link rel="manifest" href="{{ asset('manifest.json') }}">
+<link rel="icon" type="image/png" sizes="96x96"
+      href="{{ asset('icons/favicon-96x96.png') }}">
+
+<link rel="icon" type="image/svg+xml"
+      href="{{ asset('icons/favicon.svg') }}">
+
+<link rel="shortcut icon"
+      href="{{ asset('icons/favicon.ico') }}">
+
+
+<link rel="apple-touch-icon" sizes="180x180"
+      href="{{ asset('icons/apple-touch-icon.png') }}">
 
 
 <meta name="theme-color" content="#2563eb">
 
 
-<link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">
+
+<link rel="stylesheet"
+href="{{ asset('css/landing.css') }}">
 
 
-
-<!-- Favicon -->
-
-<link rel="icon" href="{{ asset('assets/images/logo.png') }}">
+<link rel="stylesheet"
+href="{{ asset('css/navbar.css') }}">
 
 
+<link rel="stylesheet"
+href="{{ asset('css/sections.css') }}">
 
-<!-- CSS -->
 
-<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+<link rel="stylesheet"
+href="{{ asset('css/responsive.css') }}">
+
+
+<link rel="stylesheet"
+href="{{ asset('css/whatsapp.css') }}">
 
 
 @stack('styles')
 
-<link rel="stylesheet" href="{{ asset('css/landing.css') }}">
-<link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
-<link rel="stylesheet" href="{{ asset('css/sections.css') }}">
-<link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
-<link rel="stylesheet" href="{{ asset('css/whatsapp.css') }}">
 
 </head>
 
@@ -108,7 +111,6 @@
 
 
 <div class="bg"></div>
-
 
 
 @include('partials.navbar')
@@ -125,16 +127,12 @@
 
 @include('partials.footer')
 
-
 @include('partials.whatsapp')
-
 
 @include('partials.scripts')
 
 
-
 @stack('scripts')
-
 
 
 </body>

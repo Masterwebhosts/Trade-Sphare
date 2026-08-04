@@ -26,17 +26,21 @@
 
 @forelse($campaigns as $c)
 
-    @php
-        $budget = (float) $c->budget_total;
-        $spent  = (float) $c->budget_spent;
-        $remaining = max(0, $budget - $spent);
+   @php
+    $budget = (float) $c->budget_total;
+    $spent = $c->ads
+    ->flatMap(function ($ad) {
+        return $ad->clicks;
+    })
+    ->count() * (float) $c->cpc;
+    $remaining = max(0, $budget - $spent);
 
-        $statusColors = [
-            'approved' => 'bg-green-100 text-green-700',
-            'Pending'  => 'bg-yellow-100 text-yellow-700',
-            'rejected' => 'bg-red-100 text-red-700',
-        ];
-    @endphp
+    $statusColors = [
+        'approved' => 'bg-green-100 text-green-700',
+        'Pending'  => 'bg-yellow-100 text-yellow-700',
+        'rejected' => 'bg-red-100 text-red-700',
+    ];
+@endphp
 
     <div class="bg-white p-4 rounded-xl shadow border">
 
@@ -68,34 +72,37 @@
 </span>
 
         </div>
+{{-- INFO --}}
+<div class="text-sm text-gray-600 mt-3 space-y-1">
 
-        {{-- INFO --}}
-        <div class="text-sm text-gray-600 mt-3 space-y-1">
+    <div>
+        الميزانية:
+        <b>${{ number_format($budget, 2) }}</b>
+    </div>
 
-            <div>
-                الميزانية:
-                <b>${{ number_format($budget, 2) }}</b>
-            </div>
+    <div>
+        المصروف:
+        <b class="text-red-600">
+            ${{ number_format($spent, 2) }}
+        </b>
+    </div>
 
-            <div>
-                المصروف:
-                <b class="text-red-600">${{ number_format($spent, 2) }}</b>
-            </div>
+    <div>
+        المتبقي:
+        <b class="{{ $remaining > 0 ? 'text-green-600' : 'text-red-600' }}">
+            ${{ number_format($remaining, 2) }}
+        </b>
+    </div>
 
-            <div>
-                المتبقي:
-                <b class="{{ $remaining > 0 ? 'text-green-600' : 'text-red-600' }}">
-                    ${{ number_format($remaining, 2) }}
-                </b>
-            </div>
+    <div>
+    قيمة النقرة:
+    <b>
+        {{ number_format(((float)($c->cpc ?? 0)) * 100, 0) }} سنت
+    </b>
+</div>
 
-            <div>
-                قيمة النقرة:
-                <b>${{ number_format($c->cpc ?? 0, 2) }}</b>
-            </div>
-
-        </div>
-
+</div>
+        
         {{-- ACTIONS --}}
         <div class="mt-4 flex gap-2">
 

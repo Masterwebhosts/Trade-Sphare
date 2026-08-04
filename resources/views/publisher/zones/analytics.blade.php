@@ -243,7 +243,7 @@
 
             <input
                 readonly
-                value="<script src='{{ url('/js/serve.js') }}' data-zone='{{ $zone->token }}'></script>"
+                value="<script src='{{ url('/js/serve.js') }}' data-zone='{{ $zone->token }}' data-base='{{ url('/') }}'></script>"
                 class="w-full border rounded-lg p-2 text-xs bg-gray-50"
             >
 

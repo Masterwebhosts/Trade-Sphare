@@ -78,12 +78,11 @@ $statusColors = [
                             <th class="p-4 text-left">العنوان</th>
                             <th class="p-4 text-left">الحملة</th>
                             <th class="p-4 text-left">التنسيق</th>
-                            <th class="p-4 text-left">النوع</th>
                             <th class="p-4 text-left">الحالة</th>
                             <th class="p-4 text-left">الظهور</th>
                             <th class="p-4 text-left">النقرات</th>
                             <th class="p-4 text-left">CTR</th>
-                            <th class="p-4 text-left">الإجراءات</th>
+                            
                         </tr>
                     </thead>
 
@@ -108,11 +107,14 @@ $statusColors = [
 
                                 <td class="p-4 font-medium">{{ $ad->title }}</td>
 
-                                <td class="p-4 text-gray-600">{{ $ad->campaign?->name ?? '-' }}</td>
+                                <td class="p-4 text-gray-600">
+    {{ $ad->campaign?->title ?? '-' }}
+</td>
 
-                                <td class="p-4">{{ $ad->format?->name ?? '-' }}</td>
+<td class="p-4">
+    {{ $ad->content_type ?? '-' }}
+</td>
 
-                                <td class="p-4">{{ ucfirst($ad->type ?? '-') }}</td>
 
                                 {{-- STATUS --}}
                                 <td class="p-4">

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AdZone;
 use App\Services\AdService;
+use App\Services\Tracking\ImpressionService;
+use Illuminate\Http\Request;
 
 class AdPublicController extends Controller
 {
@@ -14,7 +16,9 @@ class AdPublicController extends Controller
      */
     public function embed(
         string $token,
-        AdService $adService
+        AdService $adService,
+        ImpressionService $impressionService,
+        Request $request
     ) {
 
         /*
@@ -26,8 +30,6 @@ class AdPublicController extends Controller
         $zone = AdZone::where('token', $token)
             ->firstOrFail();
 
-
-
         /*
         |--------------------------------------------------------------------------
         | Validate Zone
@@ -36,14 +38,11 @@ class AdPublicController extends Controller
 
         if (! $zone->isServeable()) {
 
-            return response()
-                ->view('ads.empty', [
-                    'zone' => $zone,
-                ]);
+            return response()->view('ads.empty', [
+                'zone' => $zone,
+            ]);
 
         }
-
-
 
         /*
         |--------------------------------------------------------------------------
@@ -55,13 +54,30 @@ class AdPublicController extends Controller
             $zone->id
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | Record Impression
+        |--------------------------------------------------------------------------
+        */
 
+        if ($ad) {
+
+            $impressionService->record(
+                $ad,
+                $request,
+                [
+                    'zone' => $zone,
+                    'publisher_id' => $zone->publisher_id,
+                    'zone_id' => $zone->id,
+                    'channel' => 'embed',
+                ]
+            );
+
+        }
 
         /*
         |--------------------------------------------------------------------------
         | Render Advertisement
-        |
-        | Tracking is handled separately
         |--------------------------------------------------------------------------
         */
 

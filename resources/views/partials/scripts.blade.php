@@ -3,36 +3,6 @@
 document.addEventListener("DOMContentLoaded", function(){
 
 
-
-/* =========================
-   Service Worker - PWA
-========================= */
-
-
-if('serviceWorker' in navigator){
-
-
-    navigator.serviceWorker.register('/serviceworker.js')
-
-    .then(()=>{
-
-        console.log('PWA Ready');
-
-    })
-
-    .catch(error=>{
-
-        console.log('Service Worker Error:', error);
-
-    });
-
-
-}
-
-
-
-
-
 /* =========================
    Mobile Navbar
 ========================= */

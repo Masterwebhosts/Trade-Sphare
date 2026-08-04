@@ -59,10 +59,11 @@ class AdServerController extends Controller
             $ad,
             $request,
             [
-                'publisher_id' => $zone->publisher_id,
-                'zone_id' => $zone->id,
-                'channel' => 'web',
-            ]
+    'zone' => $zone,
+    'publisher_id' => $zone->publisher_id,
+    'zone_id' => $zone->id,
+    'channel' => 'web',
+]
         );
 
 

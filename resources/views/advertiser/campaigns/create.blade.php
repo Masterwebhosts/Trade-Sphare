@@ -169,56 +169,31 @@
 
 
         </div>
+{{-- CPC --}}
+
+<div>
+
+    <label class="block mb-2 font-medium text-gray-700">
+
+        سعر النقرة
+
+    </label>
 
 
+    <div class="w-full border rounded-lg p-3 bg-gray-50">
+
+        10 سنت
+
+    </div>
 
 
+    <p class="text-sm text-gray-500 mt-1">
 
+        سعر النقرة ثابت لجميع الحملات.
 
+    </p>
 
-
-        {{-- CPC --}}
-
-        <div>
-
-            <label for="cpc"
-                   class="block mb-2 font-medium text-gray-700">
-
-                سعر النقرة CPC ($)
-
-            </label>
-
-
-
-            <input
-                id="cpc"
-                type="number"
-                name="cpc"
-                step="0.01"
-                min="0.01"
-                value="{{ old('cpc') }}"
-                class="w-full border rounded-lg p-3 focus:ring focus:ring-blue-200"
-                required>
-
-
-
-            <p class="text-sm text-gray-500 mt-1">
-
-                المبلغ الذي يتم خصمه عند كل نقرة.
-
-            </p>
-
-
-        </div>
-
-
-
-
-
-
-
-
-
+</div>
         {{-- التواريخ --}}
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
