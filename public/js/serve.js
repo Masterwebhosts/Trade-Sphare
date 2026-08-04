@@ -32,32 +32,49 @@
 
             const ad = res.data;
 
-
             // منع التكرار
             if (document.querySelector(`[data-zone-id="${zoneId}"]`)) {
                 return;
             }
 
-
             const container = document.createElement('div');
 
-            container.setAttribute(
-                'data-zone-id',
-                zoneId
-            );
-
+            container.setAttribute('data-zone-id', zoneId);
 
             container.style.cssText = `
-                border:1px solid #ddd;
-                padding:10px;
-                border-radius:6px;
-                text-align:center;
-                max-width:300px;
-                font-family:Arial,sans-serif;
-                background:#fff;
-            `;
+    position:relative;
+    border:1px solid #ddd;
+    padding:10px;
+    border-radius:6px;
+    text-align:center;
+    max-width:300px;
+    font-family:Arial,sans-serif;
+    background:#fff;
+`;
 
+            const sponsored = document.createElement('a');
 
+            sponsored.innerHTML = 'ⓘ إعلان ممول';
+
+            sponsored.href = baseUrl;
+
+            sponsored.target = '_blank';
+
+            sponsored.rel = 'noopener noreferrer';
+
+            sponsored.style.cssText = `
+    position:absolute;
+    top:8px;
+    right:8px;
+    font-size:11px;
+    color:#6b7280;
+    background:#f3f4f6;
+    padding:4px 8px;
+    border-radius:999px;
+    text-decoration:none;
+`;
+
+            container.appendChild(sponsored);
 
             // TITLE
             if (ad.title) {
@@ -121,7 +138,7 @@
 
                 a.rel = 'noopener noreferrer';
 
-                a.textContent = 'Visit';
+                a.textContent = 'زيارة الإعلان';
 
 
                 a.style.cssText = `
