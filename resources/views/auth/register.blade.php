@@ -108,7 +108,39 @@
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
-        <!-- الإجراءات -->
+                <!-- الإجراءات -->
+        <!-- الموافقة على الشروط والخصوصية -->
+        <div class="mt-4">
+            <label class="flex items-start gap-2">
+                <input
+                    type="checkbox"
+                    name="legal_agreement"
+                    value="1"
+                    {{ old('legal_agreement') ? 'checked' : '' }}
+                    required
+                    class="mt-1 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                >
+                <span class="text-sm text-gray-600 leading-6">
+                    أوافق على
+                    <a
+                        href="https://tradesphare.com/blog/terms-of-use/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-indigo-600 hover:text-indigo-800 underline"
+                    >الشروط والأحكام</a>
+                    و
+                    <a
+                        href="https://tradesphare.com/blog/privacy-policy/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-indigo-600 hover:text-indigo-800 underline"
+                    >سياسة الخصوصية</a>
+                    الخاصة بمنصة Trade Sphare.
+                </span>
+            </label>
+            <x-input-error :messages="$errors->get('legal_agreement')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-end mt-4">
 
             <a

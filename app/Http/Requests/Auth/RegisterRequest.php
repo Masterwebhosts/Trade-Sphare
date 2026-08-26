@@ -42,17 +42,24 @@ class RegisterRequest extends FormRequest
                 'required',
                 'in:advertiser,publisher',
             ],
+
+            'legal_agreement' => [
+                'required',
+                'accepted',
+            ],
         ];
     }
 
     /**
-     * Custom error messages
+     * Custom error messages.
      */
     public function messages(): array
     {
         return [
             'role.required' => 'Please select account type.',
             'role.in' => 'Invalid account type selected.',
+            'legal_agreement.required' => 'You must agree to the terms and privacy policy.',
+            'legal_agreement.accepted' => 'You must agree to the terms and privacy policy.',
         ];
     }
 }
