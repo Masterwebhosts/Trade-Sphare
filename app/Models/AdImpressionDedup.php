@@ -3,40 +3,46 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class AdImpressionDedup extends Model
+class ApiIntegration extends Model
 {
-    protected $table = 'ad_impression_dedup';
-
-
     protected $fillable = [
-        'ad_id',
-        'zone_id',
-        'fingerprint',
-        'last_impression_at',
+        'name',
+        'slug',
+        'description',
+        'api_key',
+        'api_secret_hash',
+        'status',
+        'permissions',
+        'rate_limit',
+        'allowed_ips',
+        'last_used_at',
+        'approved_at',
+        'revoked_at',
+        'created_by',
     ];
-
 
     protected $casts = [
-        'last_impression_at' => 'datetime',
+        'permissions' => 'array',
+        'allowed_ips' => 'array',
+        'last_used_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'revoked_at' => 'datetime',
     ];
 
-
-
-    public function ad()
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(
-            Ad::class
-        );
+        return $this->belongsTo(User::class, 'created_by');
     }
 
-
-
-    public function zone()
+    public function isApproved(): bool
     {
-        return $this->belongsTo(
-            AdZone::class,
-            'zone_id'
-        );
+        return $this->status === 'approved';
+    }
+
+    public function isRevoked(): bool
+    {
+        return $this->status === 'revoked';
     }
 }

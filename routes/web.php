@@ -5,7 +5,9 @@ use App\Http\Controllers\AdPreviewController;
 use App\Http\Controllers\AdPublicController;
 use App\Http\Controllers\DashboardRedirectController;
 use App\Http\Controllers\ProfileController;
-
+use App\Http\Controllers\Management\ManagementDashboardController;
+use App\Http\Controllers\Management\ProductController;
+use App\Http\Controllers\Management\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,3 +92,26 @@ Route::middleware('auth')->group(function () {
         ->name('pages.info');
 
 });
+
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('management')
+    ->name('management.')
+    ->group(function () {
+
+        Route::get('/dashboard', [
+            ManagementDashboardController::class,
+            'index',
+        ])->name('dashboard');
+
+        Route::resource('products', ProductController::class)
+            ->except(['show']);
+
+        Route::patch('/products/{product}/toggle', [
+            ProductController::class,
+            'toggle',
+        ])->name('products.toggle');
+
+        Route::resource('subscriptions', SubscriptionController::class)
+            ->except(['show']);
+
+    });

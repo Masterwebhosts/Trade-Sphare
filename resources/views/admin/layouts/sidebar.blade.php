@@ -53,6 +53,10 @@
          تحليل الاحتيال
         </a>
 
+        <a href="{{ route('management.dashboard') }}"
+        class="block p-2 rounded hover:bg-gray-800 text-green-300">
+        إدارة المنتجات والاشتراكات
+        </a>
     </nav>
 
     {{-- FOOTER --}}
