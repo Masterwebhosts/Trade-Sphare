@@ -104,7 +104,6 @@ href="{{ asset('css/whatsapp.css') }}">
 @stack('styles')
 
 
-    @include('partials.pwa')
 </head>
 
 

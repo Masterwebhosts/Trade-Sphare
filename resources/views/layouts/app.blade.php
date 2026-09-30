@@ -27,7 +27,6 @@
     'resources/js/app.js'
 ])
 
-    @include('partials.pwa')
 </head>
 
 <body class="bg-gray-100 text-gray-900">
