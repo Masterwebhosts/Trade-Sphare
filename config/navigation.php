@@ -54,6 +54,11 @@ return [
            'route' => 'admin.fraud.dashboard',
         ],
 
+        [
+           'label' => 'إدارة المنتجات والاشتراكات',
+           'route' => 'management.dashboard',
+        ],
+
     ],
 
     'advertiser' => [

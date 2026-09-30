@@ -115,10 +115,10 @@ class ClickService
 
 
                 if (
-                    $dedup
-                    &&
-                    ! $dedup->isExpired(1)
-                ) {
+    $dedup
+    &&
+    ! $dedup->isExpired(4320)
+) {
 
 
                     logger()->info(
