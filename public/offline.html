@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="theme-color" content="#000000">
+
+    <title>غير متصل - Trade Sphare</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f3f4f6;
+            color: #111827;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .offline {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            border-radius: 20px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 26px;
+        }
+
+        p {
+            margin: 0 0 24px;
+            line-height: 1.8;
+            color: #6b7280;
+        }
+
+        button {
+            border: 0;
+            border-radius: 10px;
+            padding: 12px 24px;
+            background: #000000;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="offline">
+
+    <img
+        class="icon"
+        src="/icons/apple-touch-icon.png"
+        alt="Trade Sphare"
+    >
+
+    <h1>أنت غير متصل بالإنترنت</h1>
+
+    <p>
+        يبدو أن الاتصال بالإنترنت غير متاح حاليًا.
+        تحقق من الاتصال ثم حاول مرة أخرى.
+    </p>
+
+    <button onclick="location.reload()">
+        إعادة المحاولة
+    </button>
+
+</div>
+
+</body>
+</html>
