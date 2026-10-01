@@ -28,14 +28,35 @@
         <div class="mt-4">
             <x-input-label for="password" value="كلمة المرور" />
 
-            <x-text-input
-                id="password"
-                class="block mt-1 w-full"
-                type="password"
-                name="password"
-                required
-                autocomplete="current-password"
-            />
+            <div style="position: relative;">
+                <x-text-input
+                    id="password"
+                    class="block mt-1 w-full"
+                    type="password"
+                    name="password"
+                    required
+                    autocomplete="current-password"
+                    style="padding-left: 45px;"
+                />
+
+                <button
+                    type="button"
+                    id="toggle-password"
+                    aria-label="إظهار كلمة المرور"
+                    style="
+                        position: absolute;
+                        left: 10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: none;
+                        border: 0;
+                        padding: 4px;
+                        cursor: pointer;
+                        font-size: 18px;
+                        line-height: 1;
+                    "
+                >👁</button>
+            </div>
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -49,6 +70,7 @@
                     class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                     name="remember"
                 >
+
                 <span class="ms-2 text-sm text-gray-600">
                     تذكرني
                 </span>
@@ -72,7 +94,28 @@
             </x-primary-button>
 
         </div>
-
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.getElementById('toggle-password');
+            const password = document.getElementById('password');
+
+            if (!button || !password) {
+                return;
+            }
+
+            button.addEventListener('click', function () {
+                const isHidden = password.type === 'password';
+
+                password.type = isHidden ? 'text' : 'password';
+                button.textContent = isHidden ? '🙈' : '👁';
+                button.setAttribute(
+                    'aria-label',
+                    isHidden ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'
+                );
+            });
+        });
+    </script>
 
 </x-guest-layout>
