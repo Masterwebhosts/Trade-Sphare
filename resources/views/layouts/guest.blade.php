@@ -58,8 +58,8 @@
 
         <a href="/">
 
-            <img 
-                src="{{ asset('assets/images/logo.png') }}"
+            <img
+                src="{{ asset('assets/favicon.png') }}"
                 alt="Trade Sphare"
                 class="w-20 h-20 object-contain"
             >
